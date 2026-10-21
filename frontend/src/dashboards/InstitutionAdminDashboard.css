@@ -1,0 +1,371 @@
+
+/* ==========================================
+   INSTITUTION ADMINISTRATOR DASHBOARD
+   Clean, responsive light theme
+   ========================================== */
+
+.institution-admin-dashboard {
+    min-height: 100%;
+    color: #203548;
+    background: #f5f8fb;
+}
+
+.institution-admin-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 8px 0 28px;
+}
+
+/* Welcome section */
+
+.institution-welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 30px 32px;
+    margin-bottom: 30px;
+    border: 1px solid #dcebe8;
+    border-left: 4px solid #15b8a6;
+    border-radius: 18px;
+    background: linear-gradient(
+            115deg,
+            #ffffff 15%,
+            #f0fbf8 100%
+    );
+}
+
+.institution-welcome-content {
+    max-width: 760px;
+}
+
+.institution-eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #138779;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.institution-welcome h2 {
+    margin: 0 0 10px;
+    color: #193449;
+    font-size: clamp(23px, 2.5vw, 30px);
+    font-weight: 750;
+    line-height: 1.3;
+}
+
+.institution-welcome p {
+    max-width: 700px;
+    margin: 0;
+    color: #708394;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.institution-welcome-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 82px;
+    height: 82px;
+    border: 1px solid #cce8e1;
+    border-radius: 22px;
+    background: #ffffff;
+    color: #168d7e;
+}
+
+/* Section headings */
+
+.institution-statistics,
+.institution-management {
+    margin-bottom: 32px;
+}
+
+.institution-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.institution-section-heading h2 {
+    margin: 0;
+    color: #20384b;
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.institution-section-heading p {
+    margin: 6px 0 0;
+    color: #7a8c9b;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Statistics */
+
+.institution-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.institution-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+    padding: 22px 20px;
+    border: 1px solid #e3eaf0;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(35, 59, 78, 0.035);
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.institution-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 22px rgba(35, 59, 78, 0.07);
+}
+
+.institution-stat-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+}
+
+.institution-stat-icon.blue {
+    color: #4779cb;
+    background: #eaf2ff;
+}
+
+.institution-stat-icon.purple {
+    color: #8060cb;
+    background: #f1ecff;
+}
+
+.institution-stat-icon.green {
+    color: #219875;
+    background: #e5f7ef;
+}
+
+.institution-stat-icon.orange {
+    color: #d58a36;
+    background: #fff2e4;
+}
+
+.institution-stat-info {
+    min-width: 0;
+}
+
+.institution-stat-info p {
+    margin: 0 0 7px;
+    color: #718394;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.institution-stat-info h3 {
+    margin: 0;
+    color: #193449;
+    font-size: 27px;
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+/* Management cards */
+
+.institution-management-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.institution-management-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    padding: 21px;
+    border: 1px solid #e2eaf0;
+    border-radius: 15px;
+    background: #ffffff;
+    color: inherit;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(35, 59, 78, 0.025);
+    transition:
+            transform 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.institution-management-card:hover {
+    transform: translateY(-3px);
+    border-color: #b7ded5;
+    box-shadow: 0 9px 22px rgba(35, 59, 78, 0.07);
+}
+
+.institution-management-card:focus-visible {
+    outline: 3px solid #75bdb0;
+    outline-offset: 3px;
+}
+
+.institution-management-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 49px;
+    height: 49px;
+    border-radius: 14px;
+    background: #eaf6f3;
+    color: #218779;
+}
+
+.institution-management-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.institution-management-content h3 {
+    margin: 0 0 7px;
+    color: #253e4f;
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.5;
+}
+
+.institution-management-content p {
+    margin: 0;
+    color: #788b98;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.institution-management-arrow {
+    flex-shrink: 0;
+    color: #91a4af;
+    transition:
+            transform 0.2s ease,
+            color 0.2s ease;
+}
+
+.institution-management-card:hover
+.institution-management-arrow {
+    transform: translateX(3px);
+    color: #168779;
+}
+
+/* Footer */
+
+.institution-footer {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 18px 2px 0;
+    border-top: 1px solid #e4ebf0;
+    color: #8a9aa5;
+    font-size: 11px;
+}
+
+/* Tablet */
+
+@media (max-width: 1100px) {
+    .institution-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+    .institution-admin-page {
+        padding-top: 0;
+    }
+
+    .institution-welcome {
+        padding: 23px 20px;
+        margin-bottom: 25px;
+        border-radius: 15px;
+    }
+
+    .institution-welcome-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 16px;
+    }
+
+    .institution-welcome-icon svg {
+        width: 29px;
+        height: 29px;
+    }
+
+    .institution-welcome p {
+        font-size: 13px;
+    }
+
+    .institution-stats-grid {
+        gap: 12px;
+    }
+
+    .institution-stat-card {
+        gap: 11px;
+        padding: 16px 13px;
+    }
+
+    .institution-stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+    }
+
+    .institution-stat-info p {
+        font-size: 11px;
+    }
+
+    .institution-stat-info h3 {
+        font-size: 23px;
+    }
+
+    .institution-management-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .institution-management-card {
+        padding: 17px;
+    }
+
+    .institution-section-heading h2 {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 420px) {
+    .institution-welcome-icon {
+        display: none;
+    }
+
+    .institution-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .institution-stat-card {
+        padding: 17px;
+    }
+}

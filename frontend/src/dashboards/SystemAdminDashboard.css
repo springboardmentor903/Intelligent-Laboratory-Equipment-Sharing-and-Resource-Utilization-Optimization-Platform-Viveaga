@@ -1,0 +1,697 @@
+
+.system-admin-dashboard {
+    min-height: 100%;
+    background: #f5f8fa;
+    color: #172b3a;
+}
+
+.sysadmin-page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 8px 0 24px;
+}
+
+/* Hero */
+.sysadmin-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 30px 32px;
+    margin-bottom: 30px;
+    border: 1px solid #dcebe8;
+    border-radius: 20px;
+    background: linear-gradient(
+            115deg,
+            #e9f7f3 0%,
+            #f4f8fc 70%,
+            #edf2fb 100%
+    );
+}
+
+.sysadmin-hero-content {
+    max-width: 720px;
+}
+
+.sysadmin-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    color: #167b70;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+}
+
+.sysadmin-hero h2 {
+    margin: 0 0 12px;
+    color: #183447;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 750;
+    line-height: 1.25;
+}
+
+.sysadmin-hero-content > p {
+    max-width: 650px;
+    margin: 0;
+    color: #607583;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.sysadmin-hero-icon {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #cbe5df;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #20877a;
+}
+
+.sysadmin-status-dot {
+    position: absolute;
+    top: 17px;
+    right: 17px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid white;
+    border-radius: 50%;
+    background: #24a47c;
+}
+
+/* Sections */
+.sysadmin-overview,
+.sysadmin-administration {
+    margin-bottom: 32px;
+}
+
+.sysadmin-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.sysadmin-section-heading h2,
+.sysadmin-activity-header h2 {
+    margin: 0;
+    color: #1d3445;
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.sysadmin-section-heading p,
+.sysadmin-activity-header p {
+    margin: 6px 0 0;
+    color: #7b8b97;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.sysadmin-live-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #dcebe6;
+    border-radius: 30px;
+    background: #fff;
+    color: #527269;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.sysadmin-live-label > span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2ba886;
+}
+
+/* Overview cards */
+.sysadmin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.sysadmin-stat-card {
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid #e5ebef;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(31, 55, 72, 0.035);
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+}
+
+.sysadmin-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 22px rgba(31, 55, 72, 0.07);
+}
+
+.sysadmin-stat-card-clickable,
+.sysadmin-clickable-card {
+    width: 100%;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sysadmin-stat-card-clickable:hover,
+.sysadmin-clickable-card:hover {
+    border-color: #b6dcd4;
+}
+
+.sysadmin-stat-card-clickable:focus-visible,
+.sysadmin-clickable-card:focus-visible {
+    outline: 3px solid #75bdb0;
+    outline-offset: 3px;
+}
+
+.sysadmin-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 23px;
+}
+
+.sysadmin-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+}
+
+.sysadmin-stat-icon.blue {
+    background: #eaf2ff;
+    color: #4779cb;
+}
+
+.sysadmin-stat-icon.purple {
+    background: #f1ecff;
+    color: #8060cb;
+}
+
+.sysadmin-stat-icon.green {
+    background: #e5f7ef;
+    color: #219875;
+}
+
+.sysadmin-stat-icon.orange {
+    background: #fff2e4;
+    color: #d58a36;
+}
+
+.sysadmin-stat-arrow {
+    color: #9aabb5;
+}
+
+.sysadmin-stat-title {
+    margin: 0 0 8px;
+    color: #637785;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.sysadmin-stat-card h3 {
+    margin: 0 0 8px;
+    color: #193447;
+    font-size: 30px;
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+.sysadmin-stat-description {
+    margin: 0;
+    color: #92a0aa;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+/* Administration action cards */
+.sysadmin-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.sysadmin-action-card {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    min-width: 0;
+    padding: 21px;
+    border: 1px solid #e4ebef;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(31, 55, 72, 0.025);
+    transition:
+            border-color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.sysadmin-action-card:hover {
+    transform: translateY(-2px);
+    border-color: #b6dcd4;
+}
+
+.sysadmin-action-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #eaf6f3;
+    color: #238779;
+}
+
+.sysadmin-action-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.sysadmin-action-content h3 {
+    margin: 0 0 7px;
+    color: #253e4f;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.sysadmin-action-content p {
+    margin: 0;
+    color: #788b98;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.sysadmin-action-arrow {
+    flex-shrink: 0;
+    color: #9aabb5;
+}
+
+/* Activity panel */
+.sysadmin-activity {
+    overflow: hidden;
+    border: 1px solid #e4ebef;
+    border-radius: 17px;
+    background: #fff;
+}
+
+.sysadmin-activity-header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 22px 24px;
+    border-bottom: 1px solid #edf1f4;
+}
+
+.sysadmin-activity-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    background: #edf4ff;
+    color: #4d79c3;
+}
+
+.sysadmin-activity-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 24px 40px;
+    text-align: center;
+}
+
+.sysadmin-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    border-radius: 18px;
+    background: #f1f6f8;
+    color: #8296a2;
+}
+
+.sysadmin-activity-empty h3 {
+    margin: 0 0 9px;
+    color: #354d5d;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.sysadmin-activity-empty p {
+    max-width: 440px;
+    margin: 0;
+    color: #81919c;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* Footer */
+.sysadmin-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px;
+    padding: 22px 2px 0;
+    color: #8a9aa5;
+    font-size: 11px;
+}
+
+.sysadmin-footer-separator {
+    color: #c2ccd2;
+}
+
+/* Role requests page */
+.sysadmin-role-requests {
+    margin-top: 24px;
+    margin-bottom: 32px;
+}
+
+.sysadmin-refresh-button,
+.sysadmin-approve-button,
+.sysadmin-reject-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid #dce5e9;
+    border-radius: 9px;
+    background: #fff;
+    color: #334b5b;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
+    transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            opacity 0.2s ease;
+}
+
+.sysadmin-refresh-button:hover:not(:disabled) {
+    border-color: #268f82;
+    background: #f0f7f6;
+}
+
+.sysadmin-approve-button {
+    border-color: #c8e9d5;
+    background: #edf9f1;
+    color: #21764a;
+}
+
+.sysadmin-approve-button:hover:not(:disabled) {
+    background: #dcf4e4;
+}
+
+.sysadmin-reject-button {
+    border-color: #f2d2d2;
+    background: #fff3f3;
+    color: #b64242;
+}
+
+.sysadmin-reject-button:hover:not(:disabled) {
+    background: #ffe5e5;
+}
+
+.sysadmin-refresh-button:disabled,
+.sysadmin-approve-button:disabled,
+.sysadmin-reject-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.sysadmin-request-list {
+    display: grid;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.sysadmin-request-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px;
+    border: 1px solid #e4ebef;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(31, 55, 72, 0.025);
+    transition: border-color 0.2s ease;
+}
+
+.sysadmin-request-card:hover {
+    border-color: #b6dcd4;
+}
+
+.sysadmin-request-details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+}
+
+.sysadmin-request-details h3 {
+    margin: 0;
+    color: #253e4f;
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.sysadmin-request-details p {
+    margin: 0;
+    color: #788b98;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.sysadmin-request-role {
+    display: inline-block;
+    padding: 6px 10px;
+    border: 1px solid #dcebe8;
+    border-radius: 7px;
+    background: #eaf6f3;
+    color: #238779;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.sysadmin-request-details small {
+    color: #92a0aa;
+    font-size: 11px;
+}
+
+.sysadmin-request-actions {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.sysadmin-request-message {
+    padding: 30px 20px;
+    border: 1px solid #e4ebef;
+    border-radius: 15px;
+    background: #fff;
+    color: #788b98;
+    font-size: 13px;
+    text-align: center;
+}
+
+.sysadmin-request-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 35px 20px;
+    border: 1px dashed #d6e2e7;
+    border-radius: 15px;
+    background: #fff;
+    color: #8296a2;
+    text-align: center;
+}
+
+.sysadmin-request-empty h3 {
+    margin: 13px 0 7px;
+    color: #354d5d;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.sysadmin-request-empty p {
+    margin: 0;
+    color: #81919c;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.sysadmin-request-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 15px;
+    padding: 13px 15px;
+    border: 1px solid #f2d2d2;
+    border-radius: 10px;
+    background: #fff3f3;
+    color: #b64242;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.sysadmin-request-error button {
+    flex-shrink: 0;
+    padding: 7px 10px;
+    border: 1px solid #e8b9bc;
+    border-radius: 6px;
+    background: #fff;
+    color: #a52f2f;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sysadmin-spinning {
+    animation: sysadmin-spin 1s linear infinite;
+}
+
+@keyframes sysadmin-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .sysadmin-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .sysadmin-page {
+        padding-top: 0;
+    }
+
+    .sysadmin-hero {
+        padding: 23px 20px;
+        margin-bottom: 26px;
+        border-radius: 16px;
+    }
+
+    .sysadmin-hero-icon {
+        width: 65px;
+        height: 65px;
+        border-radius: 18px;
+    }
+
+    .sysadmin-hero-icon > svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .sysadmin-hero-content > p {
+        font-size: 13px;
+    }
+
+    .sysadmin-stats-grid {
+        gap: 12px;
+    }
+
+    .sysadmin-stat-card {
+        padding: 16px;
+    }
+
+    .sysadmin-stat-card h3 {
+        font-size: 25px;
+    }
+
+    .sysadmin-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .sysadmin-action-card {
+        padding: 17px;
+    }
+
+    .sysadmin-section-heading h2,
+    .sysadmin-activity-header h2 {
+        font-size: 17px;
+    }
+
+    .sysadmin-request-card {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 18px;
+    }
+
+    .sysadmin-request-actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .sysadmin-hero-icon {
+        display: none;
+    }
+
+    .sysadmin-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sysadmin-live-label {
+        display: none;
+    }
+
+    .sysadmin-activity-header {
+        padding: 18px;
+    }
+
+    .sysadmin-section-heading:has(.sysadmin-refresh-button) {
+        align-items: flex-start;
+    }
+
+    .sysadmin-refresh-button {
+        padding: 9px 10px;
+    }
+
+    .sysadmin-request-actions {
+        flex-direction: column;
+    }
+
+    .sysadmin-request-actions button {
+        width: 100%;
+    }
+
+    .sysadmin-request-error {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
