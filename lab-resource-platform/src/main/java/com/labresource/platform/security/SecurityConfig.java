@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,7 +32,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // CORS configuration for the React frontend
+    // CORS configuration for React frontend
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
@@ -46,6 +47,7 @@ public class SecurityConfig {
                 "GET",
                 "POST",
                 "PUT",
+                "PATCH",
                 "DELETE",
                 "OPTIONS"
         ));
@@ -68,12 +70,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
 
-                // Enable CORS before handling authentication
                 .cors(cors -> cors.configurationSource(
                         corsConfigurationSource()
                 ))
 
-                // JWT-based stateless authentication
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
@@ -91,37 +91,36 @@ public class SecurityConfig {
                         )
                 )
 
-                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
 
-                        // Registration and login are public
+                        // Public registration and login
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Student
+                        // Student test endpoint
                         .requestMatchers("/api/test/student")
                         .hasRole("RESEARCHER_STUDENT")
 
-                        // Technician
+                        // Technician test endpoint
                         .requestMatchers("/api/test/technician")
                         .hasRole("LAB_TECHNICIAN")
 
-                        // Lab Manager
+                        // Lab Manager test endpoint
                         .requestMatchers("/api/test/manager")
                         .hasRole("LAB_MANAGER")
 
-                        // Department Head
+                        // Department Head test endpoint
                         .requestMatchers("/api/test/department-head")
                         .hasRole("DEPARTMENT_HEAD")
 
-                        // Institution Administrator
+                        // Institution Administrator test endpoint
                         .requestMatchers("/api/test/institution-admin")
                         .hasRole("INSTITUTION_ADMINISTRATOR")
 
-                        // System Administrator
+                        // System Administrator test endpoint
                         .requestMatchers("/api/test/system-admin")
                         .hasRole("SYSTEM_ADMINISTRATOR")
 
-                        // Only System Admin can review role requests
+                        // Only System Administrator can review role requests
                         .requestMatchers("/api/role-requests/pending")
                         .hasRole("SYSTEM_ADMINISTRATOR")
 
@@ -132,11 +131,39 @@ public class SecurityConfig {
                         .requestMatchers("/api/role-requests")
                         .authenticated()
 
-                        // All other endpoints require authentication
+                        // Only Lab Manager can add equipment
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/equipment"
+                        )
+                        .hasRole("LAB_MANAGER")
+
+                        // Only Lab Manager can update equipment details
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/equipment/**"
+                        )
+                        .hasRole("LAB_MANAGER")
+
+                        // Only Lab Manager can change equipment status
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/equipment/*/status"
+                        )
+                        .hasRole("LAB_MANAGER")
+
+                        // Only Lab Manager can approve or reject bookings
+                        .requestMatchers(
+                                "/api/bookings/*/approve",
+                                "/api/bookings/*/reject"
+                        )
+                        .hasRole("LAB_MANAGER")
+
+                        // All remaining endpoints require authentication
                         .anyRequest().authenticated()
                 )
 
-                // OAuth2 login
+                // Existing OAuth2 login configuration
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl(
                                 "http://localhost:5173",
@@ -144,7 +171,7 @@ public class SecurityConfig {
                         )
                 )
 
-                // Add JWT filter
+                // Add JWT authentication filter
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
