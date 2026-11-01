@@ -3,6 +3,7 @@ package com.labresource.platform.dto;
 
 import com.labresource.platform.entity.Booking;
 import com.labresource.platform.entity.BookingStatus;
+import com.labresource.platform.entity.UsageMode;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ public class BookingResponseDTO {
     private LocalDateTime endTime;
     private String purpose;
     private BookingStatus status;
+    private UsageMode usageMode;
     private LocalDateTime createdAt;
 
     public BookingResponseDTO() {
@@ -45,6 +47,7 @@ public class BookingResponseDTO {
         dto.endTime = booking.getEndTime();
         dto.purpose = booking.getPurpose();
         dto.status = booking.getStatus();
+        dto.usageMode = booking.getUsageMode();
         dto.createdAt = booking.getCreatedAt();
 
         return dto;
@@ -92,6 +95,10 @@ public class BookingResponseDTO {
 
     public BookingStatus getStatus() {
         return status;
+    }
+
+    public UsageMode getUsageMode() {
+        return usageMode;
     }
 
     public LocalDateTime getCreatedAt() {

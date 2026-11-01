@@ -84,6 +84,19 @@ function formatRole(role) {
     return roles[role] || role || "User";
 }
 
+function canCheckIn(booking) {
+    if (booking.status !== "APPROVED") return false;
+
+    const startTime = new Date(booking.startTime).getTime();
+    const endTime = new Date(booking.endTime).getTime();
+    const now = Date.now();
+
+    return (
+        now >= startTime - 15 * 60 * 1000 &&
+        now <= endTime
+    );
+}
+
 function Status({ value }) {
     const status = String(value || "UNKNOWN").toUpperCase();
 
@@ -689,6 +702,8 @@ function BookingCard({
                          isManager,
                          onCancel,
                          onDecision,
+                         onCheckIn,
+                         onCheckOut,
                          busy,
                      }) {
     return (
@@ -788,6 +803,40 @@ function BookingCard({
                     >
                         <X size={17} />
                         Cancel Booking
+                    </button>
+                </div>
+            )}
+
+            {!isManager && canCheckIn(booking) && (
+                <div style={actionRowStyle}>
+                    <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => onCheckIn(booking.id)}
+                        style={{
+                            ...primaryButtonStyle,
+                            opacity: busy ? 0.65 : 1,
+                        }}
+                    >
+                        <Check size={17} />
+                        {busy ? "Please wait..." : "Check In"}
+                    </button>
+                </div>
+            )}
+
+            {!isManager && booking.status === "IN_USE" && (
+                <div style={actionRowStyle}>
+                    <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => onCheckOut(booking.id)}
+                        style={{
+                            ...primaryButtonStyle,
+                            opacity: busy ? 0.65 : 1,
+                        }}
+                    >
+                        <Check size={17} />
+                        {busy ? "Please wait..." : "Check Out"}
                     </button>
                 </div>
             )}
@@ -928,6 +977,28 @@ export default function ResourcePage({ page }) {
                 `Booking #${bookingId} ${
                     decision === "approve" ? "approved" : "rejected"
                 } successfully.`
+            );
+
+            await loadBookings();
+        } catch (err) {
+            setError(getErrorMessage(err));
+        } finally {
+            setBusyBookingId(null);
+        }
+    };
+
+    const updateUsage = async (bookingId, action) => {
+        setBusyBookingId(bookingId);
+        setError("");
+        setNotice("");
+
+        try {
+            await api.post(`/bookings/${bookingId}/${action}`);
+
+            setNotice(
+                action === "check-in"
+                    ? `Booking #${bookingId} checked in successfully.`
+                    : `Booking #${bookingId} checked out successfully.`
             );
 
             await loadBookings();
@@ -1148,6 +1219,8 @@ export default function ResourcePage({ page }) {
                                         }
                                         onCancel={cancelBooking}
                                         onDecision={decideBooking}
+                                        onCheckIn={(id) => updateUsage(id, "check-in")}
+                                        onCheckOut={(id) => updateUsage(id, "check-out")}
                                     />
                                 ))}
                             </section>

@@ -96,6 +96,12 @@ public class SecurityConfig {
                         // Public registration and login
                         .requestMatchers("/api/auth/**").permitAll()
 
+                        // Allow WebSocket handshake
+                        .requestMatchers("/ws", "/ws/**").permitAll()
+
+                        // Allow CORS preflight requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         // Student test endpoint
                         .requestMatchers("/api/test/student")
                         .hasRole("RESEARCHER_STUDENT")
@@ -138,7 +144,7 @@ public class SecurityConfig {
                         )
                         .hasRole("LAB_MANAGER")
 
-                        // Only Lab Manager can update equipment details
+                        // Only Lab Manager can update equipment
                         .requestMatchers(
                                 HttpMethod.PUT,
                                 "/api/equipment/**"

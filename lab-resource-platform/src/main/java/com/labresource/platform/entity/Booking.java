@@ -2,6 +2,7 @@
 package com.labresource.platform.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -44,6 +45,10 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private BookingStatus status = BookingStatus.PENDING;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "usage_mode", nullable = false, length = 20)
+    private UsageMode usageMode = UsageMode.EXCLUSIVE;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -105,5 +110,13 @@ public class Booking {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public UsageMode getUsageMode() {
+        return usageMode;
+    }
+
+    public void setUsageMode(UsageMode usageMode) {
+        this.usageMode = usageMode;
     }
 }

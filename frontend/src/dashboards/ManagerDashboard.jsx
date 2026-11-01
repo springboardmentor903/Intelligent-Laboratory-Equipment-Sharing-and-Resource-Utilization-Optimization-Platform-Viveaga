@@ -67,6 +67,13 @@ const sections = [
         icon: ChartNoAxesCombined,
         path: "/reports",
     },
+
+    {
+        title: "Live Equipment Monitoring",
+        description: "Monitor real-time equipment status and active laboratory usage.",
+        icon: Microscope,
+        path: "/live-equipment",
+    },
 ];
 
 export default function ManagerDashboard() {

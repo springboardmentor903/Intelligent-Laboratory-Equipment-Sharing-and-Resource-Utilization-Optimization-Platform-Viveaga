@@ -19,6 +19,7 @@ import InstitutionAdminDashboard from "./dashboards/InstitutionAdminDashboard";
 import SystemAdminDashboard from "./dashboards/SystemAdminDashboard";
 import ResourcePage from "./dashboards/ResourcePage";
 import RoleRequests from "./dashboards/RoleRequests";
+import LiveEquipment from "./dashboards/LiveEquipment";
 
 const dashboardRoutes = {
     RESEARCHER_STUDENT: "/student-dashboard",
@@ -535,9 +536,20 @@ function AppRoutes() {
             />
 
             <Route
+                path="/live-equipment"
+                element={
+                    <ProtectedRoute allowedRole="LAB_MANAGER">
+                        <LiveEquipment />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
                 path="*"
                 element={<Navigate to="/" replace />}
             />
+
+
         </Routes>
     );
 }

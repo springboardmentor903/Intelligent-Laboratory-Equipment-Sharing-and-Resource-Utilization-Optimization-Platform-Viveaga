@@ -3,6 +3,7 @@ package com.labresource.platform.controller;
 
 import com.labresource.platform.dto.BookingRequestDTO;
 import com.labresource.platform.dto.BookingResponseDTO;
+import com.labresource.platform.dto.BookingSuggestionDTO;
 import com.labresource.platform.entity.Booking;
 import com.labresource.platform.entity.User;
 import com.labresource.platform.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -30,27 +32,66 @@ public class BookingController {
         this.userRepository = userRepository;
     }
 
-    // Create a booking for the authenticated user
+    // Create normal or recurring bookings
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookingResponseDTO createBooking(
+    public List<BookingResponseDTO> createBooking(
             @RequestBody BookingRequestDTO request,
             Authentication authentication) {
 
         User user = getAuthenticatedUser(authentication);
+
+        if (request.isRecurring()) {
+
+            List<Booking> bookings =
+                    bookingService.createRecurringBookings(
+                            user.getId(),
+                            request.getEquipmentId(),
+                            request.getStartTime(),
+                            request.getEndTime(),
+                            request.getPurpose(),
+                            request.getUsageMode(),
+                            request.getRecurrenceType(),
+                            request.getRecurrenceCount()
+                    );
+
+            return bookings.stream()
+                    .map(BookingResponseDTO::fromEntity)
+                    .toList();
+        }
 
         Booking booking = bookingService.createBooking(
                 user.getId(),
                 request.getEquipmentId(),
                 request.getStartTime(),
                 request.getEndTime(),
-                request.getPurpose()
+                request.getPurpose(),
+                request.getUsageMode()
         );
 
-        return BookingResponseDTO.fromEntity(booking);
+        return List.of(BookingResponseDTO.fromEntity(booking));
     }
 
-    // View the authenticated user's own bookings
+    // Suggest alternative booking slots
+    @GetMapping("/suggestions")
+    public List<BookingSuggestionDTO> getBookingSuggestions(
+            @RequestParam Long equipmentId,
+            @RequestParam LocalDateTime requestedStartTime,
+            @RequestParam LocalDateTime requestedEndTime,
+            @RequestParam(defaultValue = "5") int suggestionCount,
+            Authentication authentication) {
+
+        getAuthenticatedUser(authentication);
+
+        return bookingService.suggestAlternativeSlots(
+                equipmentId,
+                requestedStartTime,
+                requestedEndTime,
+                suggestionCount
+        );
+    }
+
+    // View authenticated user's bookings
     @GetMapping("/my")
     public List<BookingResponseDTO> getMyBookings(
             Authentication authentication) {
@@ -63,7 +104,7 @@ public class BookingController {
                 .toList();
     }
 
-    // View every user's bookings - LAB_MANAGER only
+    // View all bookings - LAB_MANAGER only
     @GetMapping("/all")
     public List<BookingResponseDTO> getAllBookings(
             Authentication authentication) {
@@ -76,7 +117,7 @@ public class BookingController {
                 .toList();
     }
 
-    // Cancel the authenticated user's own pending booking
+    // Cancel user's own pending booking
     @PatchMapping("/{bookingId}/cancel")
     public BookingResponseDTO cancelBooking(
             @PathVariable Long bookingId,
@@ -92,7 +133,7 @@ public class BookingController {
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Approve a booking - LAB_MANAGER only
+    // Approve booking - LAB_MANAGER only
     @PatchMapping("/{bookingId}/approve")
     public BookingResponseDTO approveBooking(
             @PathVariable Long bookingId,
@@ -105,7 +146,7 @@ public class BookingController {
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Reject a booking - LAB_MANAGER only
+    // Reject booking - LAB_MANAGER only
     @PatchMapping("/{bookingId}/reject")
     public BookingResponseDTO rejectBooking(
             @PathVariable Long bookingId,
@@ -118,9 +159,40 @@ public class BookingController {
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Get the authenticated user from the database
-    private User getAuthenticatedUser(
+    // Check in
+    @PostMapping("/{bookingId}/check-in")
+    public BookingResponseDTO checkIn(
+            @PathVariable Long bookingId,
             Authentication authentication) {
+
+        User user = getAuthenticatedUser(authentication);
+
+        Booking booking = bookingService.checkIn(
+                bookingId,
+                user.getId()
+        );
+
+        return BookingResponseDTO.fromEntity(booking);
+    }
+
+    // Check out
+    @PostMapping("/{bookingId}/check-out")
+    public BookingResponseDTO checkOut(
+            @PathVariable Long bookingId,
+            Authentication authentication) {
+
+        User user = getAuthenticatedUser(authentication);
+
+        Booking booking = bookingService.checkOut(
+                bookingId,
+                user.getId()
+        );
+
+        return BookingResponseDTO.fromEntity(booking);
+    }
+
+    // Get authenticated user
+    private User getAuthenticatedUser(Authentication authentication) {
 
         if (authentication == null
                 || !authentication.isAuthenticated()
@@ -139,7 +211,7 @@ public class BookingController {
                 ));
     }
 
-    // Allow only users whose database role is LAB_MANAGER
+    // Allow only LAB_MANAGER
     private void requireLabManager(Authentication authentication) {
 
         User user = getAuthenticatedUser(authentication);

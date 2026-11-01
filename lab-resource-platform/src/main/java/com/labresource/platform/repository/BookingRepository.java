@@ -76,4 +76,71 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("bookingId") Long bookingId,
             @Param("userId") Long userId
     );
+
+    List<Booking> findByStatusAndStartTimeBefore(
+            BookingStatus status,
+            LocalDateTime startTime
+    );
+
+    // Find currently active bookings
+    @Query("""
+    SELECT b
+    FROM Booking b
+    JOIN FETCH b.equipment
+    JOIN FETCH b.user
+    WHERE b.status = :status
+    """)
+    List<Booking> findBookingsByStatusWithDetails(
+            @Param("status") BookingStatus status
+    );
+
+    // Find the next approved booking for an equipment
+    @Query("""
+    SELECT b
+    FROM Booking b
+    WHERE b.equipment.id = :equipmentId
+      AND b.status = :status
+      AND b.startTime > :currentTime
+    ORDER BY b.startTime ASC
+    """)
+    List<Booking> findUpcomingBookings(
+            @Param("equipmentId") Long equipmentId,
+            @Param("status") BookingStatus status,
+            @Param("currentTime") LocalDateTime currentTime
+    );
+
+
+    // Count bookings for each equipment within a date range
+    @Query("""
+        SELECT b.equipment.id, COUNT(b)
+        FROM Booking b
+        WHERE b.startTime < :endTime
+          AND b.endTime > :startTime
+          AND b.status IN :statuses
+        GROUP BY b.equipment.id
+        ORDER BY COUNT(b) DESC
+        """)
+    List<Object[]> countBookingsByEquipment(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("statuses") List<BookingStatus> statuses
+    );
+
+    // Find bookings that overlap a requested time slot
+    @Query("""
+    SELECT b
+    FROM Booking b
+    WHERE b.equipment.id = :equipmentId
+      AND b.status IN :statuses
+      AND b.startTime < :endTime
+      AND b.endTime > :startTime
+    ORDER BY b.startTime ASC
+    """)
+    List<Booking> findOverlappingBookings(
+            @Param("equipmentId") Long equipmentId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("statuses") List<BookingStatus> statuses
+    );
+
 }
