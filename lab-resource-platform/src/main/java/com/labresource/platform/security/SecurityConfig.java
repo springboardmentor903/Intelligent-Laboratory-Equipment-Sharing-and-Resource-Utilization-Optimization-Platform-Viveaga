@@ -24,6 +24,7 @@ public class SecurityConfig {
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter) {
+
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
@@ -96,11 +97,20 @@ public class SecurityConfig {
                         // Public registration and login
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Allow WebSocket handshake
+                        // Public institution list
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/institutions"
+                        ).permitAll()
+
+                        // WebSocket handshake
                         .requestMatchers("/ws", "/ws/**").permitAll()
 
-                        // Allow CORS preflight requests
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // CORS preflight
+                        .requestMatchers(
+                                HttpMethod.OPTIONS,
+                                "/**"
+                        ).permitAll()
 
                         // Student test endpoint
                         .requestMatchers("/api/test/student")
@@ -126,16 +136,69 @@ public class SecurityConfig {
                         .requestMatchers("/api/test/system-admin")
                         .hasRole("SYSTEM_ADMINISTRATOR")
 
-                        // Only System Administrator can review role requests
-                        .requestMatchers("/api/role-requests/pending")
-                        .hasRole("SYSTEM_ADMINISTRATOR")
+                        // =====================================
+                        // ROLE REQUEST SECURITY
+                        // =====================================
 
-                        .requestMatchers("/api/role-requests/*/review")
-                        .hasRole("SYSTEM_ADMINISTRATOR")
+                        // View pending requests:
+                        // System Admin and Institution Admin
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/role-requests/pending"
+                        )
+                        .hasAnyRole(
+                                "SYSTEM_ADMINISTRATOR",
+                                "INSTITUTION_ADMINISTRATOR"
+                        )
 
-                        // Authenticated users can access role requests
-                        .requestMatchers("/api/role-requests")
+                        // Approve or reject requests:
+                        // Service validates the actual administrator
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/role-requests/*/review"
+                        )
+                        .hasAnyRole(
+                                "SYSTEM_ADMINISTRATOR",
+                                "INSTITUTION_ADMINISTRATOR"
+                        )
+
+                        // Authenticated users can submit requests
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/role-requests"
+                        )
                         .authenticated()
+
+                        // =====================================
+                        // OPERATING HOURS
+                        // =====================================
+
+                        // View operating hours
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/equipment/*/operating-hours"
+                        )
+                        .hasAnyRole(
+                                "LAB_MANAGER",
+                                "INSTITUTION_ADMINISTRATOR",
+                                "SYSTEM_ADMINISTRATOR",
+                                "DEPARTMENT_HEAD"
+                        )
+
+                        // Update operating hours
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/equipment/*/operating-hours"
+                        )
+                        .hasAnyRole(
+                                "LAB_MANAGER",
+                                "INSTITUTION_ADMINISTRATOR",
+                                "SYSTEM_ADMINISTRATOR"
+                        )
+
+                        // =====================================
+                        // EQUIPMENT MANAGEMENT
+                        // =====================================
 
                         // Only Lab Manager can add equipment
                         .requestMatchers(
@@ -144,12 +207,15 @@ public class SecurityConfig {
                         )
                         .hasRole("LAB_MANAGER")
 
-                        // Only Lab Manager can update equipment
+                        // Only Lab Manager and System Admin can update equipment
                         .requestMatchers(
                                 HttpMethod.PUT,
-                                "/api/equipment/**"
+                                "/api/equipment/*"
                         )
-                        .hasRole("LAB_MANAGER")
+                        .hasAnyRole(
+                                "LAB_MANAGER",
+                                "SYSTEM_ADMINISTRATOR"
+                        )
 
                         // Only Lab Manager can change equipment status
                         .requestMatchers(
@@ -158,12 +224,19 @@ public class SecurityConfig {
                         )
                         .hasRole("LAB_MANAGER")
 
+                        // =====================================
+                        // BOOKING MANAGEMENT
+                        // =====================================
+
                         // Only Lab Manager can approve or reject bookings
                         .requestMatchers(
                                 "/api/bookings/*/approve",
                                 "/api/bookings/*/reject"
                         )
                         .hasRole("LAB_MANAGER")
+
+                        // Spring Boot error endpoint
+                        .requestMatchers("/error").permitAll()
 
                         // All remaining endpoints require authentication
                         .anyRequest().authenticated()

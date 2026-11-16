@@ -1,20 +1,11 @@
 
 package com.labresource.platform.controller;
 
-import com.labresource.platform.dto.EquipmentUtilizationDTO;
-import com.labresource.platform.dto.DepartmentUtilizationDTO;
-import com.labresource.platform.dto.InstitutionUtilizationDTO;
-import com.labresource.platform.dto.UsageModeUtilizationDTO;
+import com.labresource.platform.dto.*;
 import com.labresource.platform.service.UtilizationService;
-import com.labresource.platform.dto.HistoricalBenchmarkDTO;
-import com.labresource.platform.dto.IdleTimeDTO;
-import com.labresource.platform.dto.PeakUsageDTO;
-import com.labresource.platform.dto.EquipmentHeatmapDTO;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import com.labresource.platform.dto.DemandAnalysisDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -176,6 +167,24 @@ public class UtilizationController {
             LocalDate endDate) {
 
         return utilizationService.calculateDailyPeakUsage(
+                startDate,
+                endDate
+        );
+    }
+
+    // Top 5 busiest day-hour slots API
+    @GetMapping("/peak-usage/top-five")
+    public List<PeakDayHourDTO> getTopFiveDayHourSlots(
+
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
+
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate) {
+
+        return utilizationService.calculateTopFiveDayHourSlots(
                 startDate,
                 endDate
         );

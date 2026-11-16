@@ -21,6 +21,7 @@ public class EquipmentController {
     }
 
     // Get equipment with pagination and filters
+
     @GetMapping
     public Page<EquipmentListDTO> getAllEquipment(
             @RequestParam(defaultValue = "0") int page,
@@ -29,12 +30,21 @@ public class EquipmentController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long tagId,
             @RequestParam(required = false) Long departmentId,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            org.springframework.security.core.Authentication authentication) {
 
         return equipmentService.searchEquipment(
-                page, size, status, categoryId, tagId,
-                departmentId, keyword);
+                page,
+                size,
+                status,
+                categoryId,
+                tagId,
+                departmentId,
+                keyword,
+                authentication.getName()
+        );
     }
+
 
     // Get equipment by ID
     @GetMapping("/{id}")

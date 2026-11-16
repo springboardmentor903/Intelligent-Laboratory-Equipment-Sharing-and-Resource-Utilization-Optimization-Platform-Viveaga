@@ -1,5 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
+
 import {
     Microscope,
     CircleCheck,
@@ -62,12 +63,17 @@ const sections = [
         path: "/equipment",
     },
     {
-        title: "Utilization & Reports",
-        description: "Review equipment usage and laboratory reports.",
+        title: "Utilization Analytics",
+        description: "Analyze equipment usage, peak hours, idle time and resource utilization.",
         icon: ChartNoAxesCombined,
+        path: "/utilization-analytics",
+    },
+    {
+        title: "Reports",
+        description: "View laboratory reports and resource management information.",
+        icon: FileChartColumn,
         path: "/reports",
     },
-
     {
         title: "Live Equipment Monitoring",
         description: "Monitor real-time equipment status and active laboratory usage.",
@@ -83,6 +89,7 @@ export default function ManagerDashboard() {
         <div className="manager-dashboard">
             <DashboardLayout title="Lab Manager Dashboard">
                 <main className="manager-page">
+
                     <section className="manager-welcome">
                         <div className="manager-welcome-content">
                             <span className="manager-eyebrow">
@@ -192,6 +199,7 @@ export default function ManagerDashboard() {
                             Laboratory Resource Management Platform
                         </span>
                     </footer>
+
                 </main>
             </DashboardLayout>
         </div>

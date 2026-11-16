@@ -10,6 +10,7 @@ public class EquipmentUtilizationDTO {
     private String assetTag;
 
     private BigDecimal actualUsageHours;
+    private BigDecimal bookedHours;
     private BigDecimal availableHours;
     private BigDecimal idleHours;
     private BigDecimal utilizationPercentage;
@@ -22,6 +23,7 @@ public class EquipmentUtilizationDTO {
             String equipmentName,
             String assetTag,
             BigDecimal actualUsageHours,
+            BigDecimal bookedHours,
             BigDecimal availableHours,
             BigDecimal idleHours,
             BigDecimal utilizationPercentage) {
@@ -30,6 +32,7 @@ public class EquipmentUtilizationDTO {
         this.equipmentName = equipmentName;
         this.assetTag = assetTag;
         this.actualUsageHours = actualUsageHours;
+        this.bookedHours = bookedHours;
         this.availableHours = availableHours;
         this.idleHours = idleHours;
         this.utilizationPercentage = utilizationPercentage;
@@ -65,6 +68,14 @@ public class EquipmentUtilizationDTO {
 
     public void setActualUsageHours(BigDecimal actualUsageHours) {
         this.actualUsageHours = actualUsageHours;
+    }
+
+    public BigDecimal getBookedHours() {
+        return bookedHours;
+    }
+
+    public void setBookedHours(BigDecimal bookedHours) {
+        this.bookedHours = bookedHours;
     }
 
     public BigDecimal getAvailableHours() {

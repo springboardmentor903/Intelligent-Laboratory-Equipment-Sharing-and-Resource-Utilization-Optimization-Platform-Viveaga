@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 public class BookingRequestDTO {
 
     private Long equipmentId;
+    private Long sharingId;
+
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String purpose;
@@ -25,6 +27,14 @@ public class BookingRequestDTO {
 
     public void setEquipmentId(Long equipmentId) {
         this.equipmentId = equipmentId;
+    }
+
+    public Long getSharingId() {
+        return sharingId;
+    }
+
+    public void setSharingId(Long sharingId) {
+        this.sharingId = sharingId;
     }
 
     public LocalDateTime getStartTime() {

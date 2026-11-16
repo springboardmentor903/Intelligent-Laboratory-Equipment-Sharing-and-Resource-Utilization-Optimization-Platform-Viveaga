@@ -12,7 +12,7 @@ public class RoleRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -23,7 +23,16 @@ public class RoleRequest {
     @Column(nullable = false)
     private String status = "PENDING";
 
+    // Administrator responsible for this request
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to_user_id")
+    private User assignedTo;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public RoleRequest() {
+    }
 
     public Long getId() {
         return id;
@@ -53,7 +62,19 @@ public class RoleRequest {
         this.status = status;
     }
 
+    public User getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(User assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

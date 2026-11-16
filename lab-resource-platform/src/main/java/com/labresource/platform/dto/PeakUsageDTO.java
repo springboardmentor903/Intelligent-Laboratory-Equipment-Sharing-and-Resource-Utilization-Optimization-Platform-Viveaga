@@ -1,18 +1,20 @@
 package com.labresource.platform.dto;
 
+import java.math.BigDecimal;
+
 public class PeakUsageDTO {
 
     private String period;
-    private Integer usageCount;
+    private BigDecimal usageMinutes;
     private Boolean peakPeriod;
 
     public PeakUsageDTO(
             String period,
-            Integer usageCount,
+            BigDecimal usageMinutes,
             Boolean peakPeriod
     ) {
         this.period = period;
-        this.usageCount = usageCount;
+        this.usageMinutes = usageMinutes;
         this.peakPeriod = peakPeriod;
     }
 
@@ -20,8 +22,8 @@ public class PeakUsageDTO {
         return period;
     }
 
-    public Integer getUsageCount() {
-        return usageCount;
+    public BigDecimal getUsageMinutes() {
+        return usageMinutes;
     }
 
     public Boolean getPeakPeriod() {

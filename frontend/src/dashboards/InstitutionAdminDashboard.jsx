@@ -10,6 +10,8 @@ import {
     Package,
     ChartNoAxesCombined,
     ChevronRight,
+    ClipboardList,
+    Share2,
 } from "lucide-react";
 
 import DashboardLayout from "./DashboardLayout";
@@ -43,6 +45,30 @@ const statistics = [
 ];
 
 const managementSections = [
+    {
+        title: "Pending Role Requests",
+        description:
+            "Review and approve Lab Manager, Lab Technician, and Department Head requests.",
+        icon: ClipboardList,
+        path: "/role-requests",
+        highlight: true,
+    },
+    {
+        title: "Institutional Equipment Sharing",
+        description:
+            "Request equipment from partner institutions, review approvals, and manage sharing agreements.",
+        icon: Share2,
+        path: "/institution-sharing",
+        highlight: true,
+    },
+    {
+        title: "Sharing Analytics",
+        description:
+            "Monitor inter-institution equipment sharing, partner activity, utilization, and sharing fees.",
+        icon: ChartNoAxesCombined,
+        path: "/sharing-analytics",
+        highlight: true,
+    },
     {
         title: "Manage Departments",
         description:
@@ -86,7 +112,10 @@ export default function InstitutionAdminDashboard() {
     return (
         <div className="institution-admin-dashboard">
             <DashboardLayout title="Institution Administrator Dashboard">
+
                 <main className="institution-admin-page">
+
+                    {/* Welcome section */}
                     <section className="institution-welcome">
                         <div className="institution-welcome-content">
                             <span className="institution-eyebrow">
@@ -106,6 +135,7 @@ export default function InstitutionAdminDashboard() {
                         </div>
                     </section>
 
+                    {/* Statistics */}
                     <section className="institution-statistics">
                         <div className="institution-section-heading">
                             <div>
@@ -144,6 +174,7 @@ export default function InstitutionAdminDashboard() {
                         </div>
                     </section>
 
+                    {/* Institution Management */}
                     <section className="institution-management">
                         <div className="institution-section-heading">
                             <div>
@@ -162,9 +193,15 @@ export default function InstitutionAdminDashboard() {
                                 return (
                                     <button
                                         type="button"
-                                        className="institution-management-card"
+                                        className={`institution-management-card ${
+                                            section.highlight
+                                                ? "role-request-management-card"
+                                                : ""
+                                        }`}
                                         key={section.title}
-                                        onClick={() => navigate(section.path)}
+                                        onClick={() =>
+                                            navigate(section.path)
+                                        }
                                     >
                                         <div className="institution-management-icon">
                                             <Icon
@@ -188,12 +225,14 @@ export default function InstitutionAdminDashboard() {
                         </div>
                     </section>
 
+                    {/* Footer */}
                     <footer className="institution-footer">
                         <Building2 size={16} />
                         <span>
                             Laboratory Resource Management Platform
                         </span>
                     </footer>
+
                 </main>
             </DashboardLayout>
         </div>

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     BrowserRouter,
     Routes,
@@ -20,7 +20,12 @@ import SystemAdminDashboard from "./dashboards/SystemAdminDashboard";
 import ResourcePage from "./dashboards/ResourcePage";
 import RoleRequests from "./dashboards/RoleRequests";
 import LiveEquipment from "./dashboards/LiveEquipment";
-
+import UtilizationAnalytics from "./dashboards/UtilizationAnalytics";
+import WaitlistPage from "./dashboards/WaitlistPage";
+import InstitutionList from "./dashboards/InstitutionList";
+import InstitutionDetails from "./dashboards/InstitutionDetails";
+import InstitutionSharing from "./dashboards/InstitutionSharing";
+import SharingAnalytics from "./dashboards/SharingAnalytics";
 const dashboardRoutes = {
     RESEARCHER_STUDENT: "/student-dashboard",
     LAB_TECHNICIAN: "/technician-dashboard",
@@ -31,15 +36,31 @@ const dashboardRoutes = {
 };
 
 const roles = [
-    { value: "RESEARCHER_STUDENT", label: "Researcher / Student" },
-    { value: "LAB_TECHNICIAN", label: "Lab Technician" },
-    { value: "LAB_MANAGER", label: "Lab Manager" },
-    { value: "DEPARTMENT_HEAD", label: "Department Head" },
+    {
+        value: "RESEARCHER_STUDENT",
+        label: "Researcher / Student",
+    },
+    {
+        value: "LAB_TECHNICIAN",
+        label: "Lab Technician",
+    },
+    {
+        value: "LAB_MANAGER",
+        label: "Lab Manager",
+    },
+    {
+        value: "DEPARTMENT_HEAD",
+        label: "Department Head",
+    },
     {
         value: "INSTITUTION_ADMINISTRATOR",
         label: "Institution Administrator",
     },
 ];
+
+// ==========================================
+// AUTHENTICATION PAGE
+// ==========================================
 
 function AuthPage() {
     const navigate = useNavigate();
@@ -50,9 +71,13 @@ function AuthPage() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
 
+    const [institutions, setInstitutions] = useState([]);
+    const [institutionsLoading, setInstitutionsLoading] = useState(true);
+
     const [loginData, setLoginData] = useState({
         email: "",
         password: "",
+        institutionId: "",
     });
 
     const [registerData, setRegisterData] = useState({
@@ -60,19 +85,55 @@ function AuthPage() {
         email: "",
         password: "",
         requestedRole: "RESEARCHER_STUDENT",
+        institutionId: "",
     });
 
+    // LOAD INSTITUTIONS
+    useEffect(() => {
+        const fetchInstitutions = async () => {
+            try {
+                setInstitutionsLoading(true);
+
+                const response = await api.get("/institutions");
+
+                const institutionList = Array.isArray(response.data)
+                    ? response.data
+                    : [];
+
+                setInstitutions(institutionList);
+
+                if (institutionList.length === 0) {
+                    setError("No institutions are currently available.");
+                }
+            } catch (err) {
+                console.error("Institution loading error:", err);
+
+                setError(
+                    "Unable to load institutions. Please check your backend server."
+                );
+            } finally {
+                setInstitutionsLoading(false);
+            }
+        };
+
+        fetchInstitutions();
+    }, []);
+
     const handleLoginChange = (e) => {
+        const { name, value } = e.target;
+
         setLoginData((previous) => ({
             ...previous,
-            [e.target.name]: e.target.value,
+            [name]: value,
         }));
     };
 
     const handleRegisterChange = (e) => {
+        const { name, value } = e.target;
+
         setRegisterData((previous) => ({
             ...previous,
-            [e.target.name]: e.target.value,
+            [name]: value,
         }));
     };
 
@@ -98,22 +159,48 @@ function AuthPage() {
         return `Request failed with status ${err.response.status}.`;
     };
 
+    // ==========================================
+    // LOGIN
+    // ==========================================
+
     const handleLogin = async (e) => {
         e.preventDefault();
+
         setMessage("");
         setError("");
+
+        if (!loginData.institutionId) {
+            setError(
+                "Please select your institution or choose Global Access for a System Administrator."
+            );
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const response = await api.post("/auth/login", {
+            const selectedInstitutionId =
+                loginData.institutionId === "GLOBAL"
+                    ? null
+                    : Number(loginData.institutionId);
+
+            const loginRequest = {
                 email: loginData.email.trim(),
                 password: loginData.password,
-            });
+                institutionId: selectedInstitutionId,
+            };
+
+            const response = await api.post(
+                "/auth/login",
+                loginRequest
+            );
 
             const data = response.data;
 
             if (!data?.token || !data?.role) {
-                setError("Login response is missing the token or role.");
+                setError(
+                    "Login response is missing the token or role."
+                );
                 return;
             }
 
@@ -126,10 +213,21 @@ function AuthPage() {
 
             sessionStorage.setItem("token", data.token);
             sessionStorage.setItem("userRole", data.role);
-            sessionStorage.setItem("userName", data.fullName || "");
-            sessionStorage.setItem("userId", data.userId ?? "");
+            sessionStorage.setItem(
+                "userName",
+                data.fullName || ""
+            );
+            sessionStorage.setItem(
+                "userId",
+                data.userId ?? ""
+            );
+            sessionStorage.setItem(
+                "institutionId",
+                data.institutionId ?? ""
+            );
 
             navigate(dashboard, { replace: true });
+
         } catch (err) {
             setError(getErrorMessage(err));
         } finally {
@@ -137,18 +235,35 @@ function AuthPage() {
         }
     };
 
+    // ==========================================
+    // REGISTRATION
+    // ==========================================
+
     const handleRegister = async (e) => {
         e.preventDefault();
+
         setMessage("");
         setError("");
+
+        if (!registerData.institutionId) {
+            setError("Please select your institution.");
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const response = await api.post("/auth/register", {
-                ...registerData,
-                fullName: registerData.fullName.trim(),
-                email: registerData.email.trim(),
-            });
+            const response = await api.post(
+                "/auth/register",
+                {
+                    ...registerData,
+                    fullName: registerData.fullName.trim(),
+                    email: registerData.email.trim(),
+                    institutionId: Number(
+                        registerData.institutionId
+                    ),
+                }
+            );
 
             const data = response.data;
 
@@ -162,6 +277,7 @@ function AuthPage() {
             setLoginData({
                 email: registerData.email.trim(),
                 password: "",
+                institutionId: registerData.institutionId,
             });
 
             setRegisterData({
@@ -169,10 +285,12 @@ function AuthPage() {
                 email: "",
                 password: "",
                 requestedRole: "RESEARCHER_STUDENT",
+                institutionId: "",
             });
 
             setIsLogin(true);
             setShowPassword(false);
+
         } catch (err) {
             setError(getErrorMessage(err));
         } finally {
@@ -190,19 +308,25 @@ function AuthPage() {
     return (
         <main className="auth-page">
             <section className="auth-card">
+
                 <header className="auth-brand">
                     <div className="brand-icon">L</div>
 
                     <div className="brand-text">
                         <h1>Lab Resource Platform</h1>
-                        <p>Smart Laboratory Resource Management</p>
+                        <p>
+                            Smart Laboratory Resource Management
+                        </p>
                     </div>
                 </header>
 
                 <div className="auth-heading">
                     <h2>
-                        {isLogin ? "Welcome back!" : "Create your account"}
+                        {isLogin
+                            ? "Welcome back!"
+                            : "Create your account"}
                     </h2>
+
                     <p>
                         {isLogin
                             ? "Sign in to access your laboratory workspace."
@@ -222,12 +346,18 @@ function AuthPage() {
                     </div>
                 )}
 
+                {institutionsLoading && (
+                    <p>Loading institutions...</p>
+                )}
+
                 {isLogin ? (
                     <form onSubmit={handleLogin}>
+
                         <div className="form-group">
                             <label htmlFor="login-email">
                                 Email address
                             </label>
+
                             <input
                                 id="login-email"
                                 type="email"
@@ -241,13 +371,55 @@ function AuthPage() {
                         </div>
 
                         <div className="form-group">
+                            <label htmlFor="login-institution">
+                                Select institution / Access type
+                            </label>
+
+                            <select
+                                id="login-institution"
+                                name="institutionId"
+                                value={loginData.institutionId}
+                                onChange={handleLoginChange}
+                                disabled={institutionsLoading}
+                                required
+                            >
+                                <option value="">
+                                    Choose institution or access type
+                                </option>
+
+                                <option value="GLOBAL">
+                                    Global Access - System Administrator
+                                </option>
+
+                                {institutions.map((institution) => (
+                                    <option
+                                        key={institution.id}
+                                        value={String(institution.id)}
+                                    >
+                                        {institution.name} -{" "}
+                                        {institution.address}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <small>
+                                Select your registered institution.
+                                Choose Global Access only if your account
+                                is a System Administrator without an institution.
+                            </small>
+                        </div>
+
+                        <div className="form-group">
                             <label htmlFor="login-password">
                                 Password
                             </label>
+
                             <div className="password-wrapper">
                                 <input
                                     id="login-password"
-                                    type={showPassword ? "text" : "password"}
+                                    type={
+                                        showPassword ? "text" : "password"
+                                    }
                                     name="password"
                                     placeholder="Enter your password"
                                     value={loginData.password}
@@ -260,7 +432,9 @@ function AuthPage() {
                                     type="button"
                                     className="password-toggle"
                                     onClick={() =>
-                                        setShowPassword((previous) => !previous)
+                                        setShowPassword(
+                                            (previous) => !previous
+                                        )
                                     }
                                     aria-label={
                                         showPassword
@@ -276,15 +450,20 @@ function AuthPage() {
                         <button
                             type="submit"
                             className="auth-button"
-                            disabled={loading}
+                            disabled={loading || institutionsLoading}
                         >
                             {loading ? "Signing in..." : "Sign In"}
                         </button>
+
                     </form>
                 ) : (
                     <form onSubmit={handleRegister}>
+
                         <div className="form-group">
-                            <label htmlFor="register-name">Full name</label>
+                            <label htmlFor="register-name">
+                                Full name
+                            </label>
+
                             <input
                                 id="register-name"
                                 type="text"
@@ -301,6 +480,7 @@ function AuthPage() {
                             <label htmlFor="register-email">
                                 Email address
                             </label>
+
                             <input
                                 id="register-email"
                                 type="email"
@@ -314,13 +494,45 @@ function AuthPage() {
                         </div>
 
                         <div className="form-group">
+                            <label htmlFor="register-institution">
+                                Select institution
+                            </label>
+
+                            <select
+                                id="register-institution"
+                                name="institutionId"
+                                value={registerData.institutionId}
+                                onChange={handleRegisterChange}
+                                disabled={institutionsLoading}
+                                required
+                            >
+                                <option value="">
+                                    Choose your institution
+                                </option>
+
+                                {institutions.map((institution) => (
+                                    <option
+                                        key={institution.id}
+                                        value={institution.id}
+                                    >
+                                        {institution.name} -{" "}
+                                        {institution.address}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
                             <label htmlFor="register-password">
                                 Password
                             </label>
+
                             <div className="password-wrapper">
                                 <input
                                     id="register-password"
-                                    type={showPassword ? "text" : "password"}
+                                    type={
+                                        showPassword ? "text" : "password"
+                                    }
                                     name="password"
                                     placeholder="Create a password"
                                     value={registerData.password}
@@ -333,7 +545,9 @@ function AuthPage() {
                                     type="button"
                                     className="password-toggle"
                                     onClick={() =>
-                                        setShowPassword((previous) => !previous)
+                                        setShowPassword(
+                                            (previous) => !previous
+                                        )
                                     }
                                     aria-label={
                                         showPassword
@@ -350,6 +564,7 @@ function AuthPage() {
                             <label htmlFor="register-role">
                                 Select your role
                             </label>
+
                             <select
                                 id="register-role"
                                 name="requestedRole"
@@ -371,10 +586,13 @@ function AuthPage() {
                         <button
                             type="submit"
                             className="auth-button"
-                            disabled={loading}
+                            disabled={loading || institutionsLoading}
                         >
-                            {loading ? "Creating account..." : "Create Account"}
+                            {loading
+                                ? "Creating account..."
+                                : "Create Account"}
                         </button>
+
                     </form>
                 )}
 
@@ -385,7 +603,10 @@ function AuthPage() {
                             : "Already have an account?"}
                     </span>
 
-                    <button type="button" onClick={switchMode}>
+                    <button
+                        type="button"
+                        onClick={switchMode}
+                    >
                         {isLogin ? "Register" : "Sign In"}
                     </button>
                 </div>
@@ -396,10 +617,15 @@ function AuthPage() {
                     <span className="footer-separator">•</span>
                     Role-based laboratory management
                 </footer>
+
             </section>
         </main>
     );
 }
+
+// ==========================================
+// SINGLE ROLE PROTECTED ROUTE
+// ==========================================
 
 function ProtectedRoute({ allowedRole, children }) {
     const token = sessionStorage.getItem("token");
@@ -410,11 +636,47 @@ function ProtectedRoute({ allowedRole, children }) {
     }
 
     if (role !== allowedRole) {
-        return <Navigate to={dashboardRoutes[role] || "/"} replace />;
+        return (
+            <Navigate
+                to={dashboardRoutes[role] || "/"}
+                replace
+            />
+        );
     }
 
     return children;
 }
+
+// ==========================================
+// MULTIPLE ROLE PROTECTED ROUTE
+// ==========================================
+
+function MultiRoleProtectedRoute({
+                                     allowedRoles,
+                                     children,
+                                 }) {
+    const token = sessionStorage.getItem("token");
+    const role = sessionStorage.getItem("userRole");
+
+    if (!token || !role) {
+        return <Navigate to="/" replace />;
+    }
+
+    if (!allowedRoles.includes(role)) {
+        return (
+            <Navigate
+                to={dashboardRoutes[role] || "/"}
+                replace
+            />
+        );
+    }
+
+    return children;
+}
+
+// ==========================================
+// RESOURCE PROTECTED ROUTE
+// ==========================================
 
 function ProtectedResourceRoute({ children }) {
     const token = sessionStorage.getItem("token");
@@ -427,13 +689,21 @@ function ProtectedResourceRoute({ children }) {
     return children;
 }
 
+// ==========================================
+// APP ROUTES
+// ==========================================
+
 function AppRoutes() {
     const token = sessionStorage.getItem("token");
     const role = sessionStorage.getItem("userRole");
-    const defaultRoute = token ? dashboardRoutes[role] || "/" : "/";
+
+    const defaultRoute = token
+        ? dashboardRoutes[role] || "/"
+        : "/";
 
     return (
         <Routes>
+
             <Route
                 path="/"
                 element={
@@ -484,12 +754,43 @@ function AppRoutes() {
             <Route
                 path="/institution-admin-dashboard"
                 element={
-                    <ProtectedRoute allowedRole="INSTITUTION_ADMINISTRATOR">
+                    <ProtectedRoute
+                        allowedRole="INSTITUTION_ADMINISTRATOR"
+                    >
                         <InstitutionAdminDashboard />
                     </ProtectedRoute>
                 }
             />
 
+            {/* INSTITUTION SHARING */}
+
+            <Route
+                path="/institution-sharing"
+                element={
+                    <MultiRoleProtectedRoute
+                        allowedRoles={["INSTITUTION_ADMINISTRATOR"]}
+                    >
+                        <InstitutionSharing />
+                    </MultiRoleProtectedRoute>
+                }
+            />
+
+
+            {/* SHARING ANALYTICS */}
+
+            <Route
+                path="/sharing-analytics"
+                element={
+                    <MultiRoleProtectedRoute
+                        allowedRoles={[
+                            "INSTITUTION_ADMINISTRATOR",
+                            "SYSTEM_ADMINISTRATOR",
+                        ]}
+                    >
+                        <SharingAnalytics />
+                    </MultiRoleProtectedRoute>
+                }
+            />
             <Route
                 path="/system-admin-dashboard"
                 element={
@@ -499,14 +800,23 @@ function AppRoutes() {
                 }
             />
 
+            {/* BOTH ADMINISTRATORS CAN ACCESS ROLE REQUESTS */}
+
             <Route
                 path="/role-requests"
                 element={
-                    <ProtectedRoute allowedRole="SYSTEM_ADMINISTRATOR">
+                    <MultiRoleProtectedRoute
+                        allowedRoles={[
+                            "SYSTEM_ADMINISTRATOR",
+                            "INSTITUTION_ADMINISTRATOR",
+                        ]}
+                    >
                         <RoleRequests />
-                    </ProtectedRoute>
+                    </MultiRoleProtectedRoute>
                 }
             />
+
+            {/* EQUIPMENT */}
 
             <Route
                 path="/equipment"
@@ -517,6 +827,8 @@ function AppRoutes() {
                 }
             />
 
+            {/* BOOKINGS */}
+
             <Route
                 path="/bookings"
                 element={
@@ -525,6 +837,24 @@ function AppRoutes() {
                     </ProtectedResourceRoute>
                 }
             />
+
+            {/* MY WAITLIST */}
+
+            <Route
+                path="/waitlist"
+                element={
+                    <MultiRoleProtectedRoute
+                        allowedRoles={[
+                            "RESEARCHER_STUDENT",
+                            "DEPARTMENT_HEAD",
+                        ]}
+                    >
+                        <WaitlistPage />
+                    </MultiRoleProtectedRoute>
+                }
+            />
+
+            {/* REPORTS */}
 
             <Route
                 path="/reports"
@@ -535,11 +865,53 @@ function AppRoutes() {
                 }
             />
 
+            {/* LIVE EQUIPMENT */}
+
             <Route
                 path="/live-equipment"
                 element={
-                    <ProtectedRoute allowedRole="LAB_MANAGER">
+                    <ProtectedResourceRoute>
                         <LiveEquipment />
+                    </ProtectedResourceRoute>
+                }
+            />
+
+            {/* ROLE-BASED UTILIZATION ANALYTICS */}
+
+            <Route
+                path="/utilization-analytics"
+                element={
+                    <MultiRoleProtectedRoute
+                        allowedRoles={[
+                            "SYSTEM_ADMINISTRATOR",
+                            "INSTITUTION_ADMINISTRATOR",
+                            "LAB_MANAGER",
+                            "DEPARTMENT_HEAD",
+                        ]}
+                    >
+                        <UtilizationAnalytics />
+                    </MultiRoleProtectedRoute>
+                }
+            />
+
+            {/* INSTITUTION LIST */}
+
+            <Route
+                path="/institutions"
+                element={
+                    <ProtectedRoute allowedRole="SYSTEM_ADMINISTRATOR">
+                        <InstitutionList />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* INSTITUTION DETAILS */}
+
+            <Route
+                path="/institution-details/:institutionId"
+                element={
+                    <ProtectedRoute allowedRole="SYSTEM_ADMINISTRATOR">
+                        <InstitutionDetails />
                     </ProtectedRoute>
                 }
             />
@@ -549,10 +921,13 @@ function AppRoutes() {
                 element={<Navigate to="/" replace />}
             />
 
-
         </Routes>
     );
 }
+
+// ==========================================
+// MAIN APP
+// ==========================================
 
 function App() {
     return (

@@ -9,18 +9,23 @@ public class LoginResponse {
     private String email;
     private String role;
     private String token;
+    private Long institutionId;
 
     public LoginResponse() {
     }
 
     public LoginResponse(String message, Long userId,
-                         String fullName, String email, String role,String token) {
+                         String fullName, String email,
+                         String role, String token,
+                         Long institutionId) {
+
         this.message = message;
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.role = role;
-        this.token=token;
+        this.token = token;
+        this.institutionId = institutionId;
     }
 
     public String getMessage() {
@@ -69,5 +74,13 @@ public class LoginResponse {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Long getInstitutionId() {
+        return institutionId;
+    }
+
+    public void setInstitutionId(Long institutionId) {
+        this.institutionId = institutionId;
     }
 }

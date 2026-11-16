@@ -1,4 +1,3 @@
-
 package com.labresource.platform.repository;
 
 import com.labresource.platform.entity.RoleRequest;

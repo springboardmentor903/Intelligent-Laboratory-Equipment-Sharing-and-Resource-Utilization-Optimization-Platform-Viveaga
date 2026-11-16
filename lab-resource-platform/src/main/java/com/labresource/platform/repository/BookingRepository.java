@@ -3,6 +3,7 @@ package com.labresource.platform.repository;
 
 import com.labresource.platform.entity.Booking;
 import com.labresource.platform.entity.BookingStatus;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+
+    List<Booking> findByRecurringSeriesIdOrderByStartTimeAsc(
+            String recurringSeriesId
+    );
 
     // Fetch bookings belonging to a particular user
     @Query("""
@@ -77,38 +82,44 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("userId") Long userId
     );
 
+    // Find bookings whose start time has passed
     List<Booking> findByStatusAndStartTimeBefore(
             BookingStatus status,
             LocalDateTime startTime
     );
 
+    // Find approved bookings whose end time has passed
+    List<Booking> findByStatusAndEndTimeBefore(
+            BookingStatus status,
+            LocalDateTime endTime
+    );
+
     // Find currently active bookings
     @Query("""
-    SELECT b
-    FROM Booking b
-    JOIN FETCH b.equipment
-    JOIN FETCH b.user
-    WHERE b.status = :status
-    """)
+        SELECT b
+        FROM Booking b
+        JOIN FETCH b.equipment
+        JOIN FETCH b.user
+        WHERE b.status = :status
+        """)
     List<Booking> findBookingsByStatusWithDetails(
             @Param("status") BookingStatus status
     );
 
     // Find the next approved booking for an equipment
     @Query("""
-    SELECT b
-    FROM Booking b
-    WHERE b.equipment.id = :equipmentId
-      AND b.status = :status
-      AND b.startTime > :currentTime
-    ORDER BY b.startTime ASC
-    """)
+        SELECT b
+        FROM Booking b
+        WHERE b.equipment.id = :equipmentId
+          AND b.status = :status
+          AND b.startTime > :currentTime
+        ORDER BY b.startTime ASC
+        """)
     List<Booking> findUpcomingBookings(
             @Param("equipmentId") Long equipmentId,
             @Param("status") BookingStatus status,
             @Param("currentTime") LocalDateTime currentTime
     );
-
 
     // Count bookings for each equipment within a date range
     @Query("""
@@ -128,14 +139,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     // Find bookings that overlap a requested time slot
     @Query("""
-    SELECT b
-    FROM Booking b
-    WHERE b.equipment.id = :equipmentId
-      AND b.status IN :statuses
-      AND b.startTime < :endTime
-      AND b.endTime > :startTime
-    ORDER BY b.startTime ASC
-    """)
+        SELECT b
+        FROM Booking b
+        WHERE b.equipment.id = :equipmentId
+          AND b.status IN :statuses
+          AND b.startTime < :endTime
+          AND b.endTime > :startTime
+        ORDER BY b.startTime ASC
+        """)
     List<Booking> findOverlappingBookings(
             @Param("equipmentId") Long equipmentId,
             @Param("startTime") LocalDateTime startTime,
@@ -143,4 +154,45 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("statuses") List<BookingStatus> statuses
     );
 
+    // Fetch all valid bookings overlapping a date range for multiple equipment
+    @Query("""
+        SELECT b
+        FROM Booking b
+        JOIN FETCH b.equipment
+        WHERE b.equipment.id IN :equipmentIds
+          AND b.status IN :statuses
+          AND b.startTime < :endTime
+          AND b.endTime > :startTime
+        ORDER BY b.startTime ASC
+        """)
+    List<Booking> findOverlappingBookingsForEquipment(
+            @Param("equipmentIds") List<Long> equipmentIds,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("statuses") List<BookingStatus> statuses
+    );
+
+    // Find external sharing bookings for one partner institution
+    // within a specified week/date range
+    @Query("""
+        SELECT b
+        FROM Booking b
+        JOIN FETCH b.user u
+        JOIN FETCH b.equipment
+        WHERE b.equipment.id = :equipmentId
+          AND b.sharing.id = :sharingId
+          AND u.institution.id = :partnerInstitutionId
+          AND b.status IN :statuses
+          AND b.startTime < :endTime
+          AND b.endTime > :startTime
+        ORDER BY b.startTime ASC
+        """)
+    List<Booking> findPartnerSharingBookingsInRange(
+            @Param("equipmentId") Long equipmentId,
+            @Param("sharingId") Long sharingId,
+            @Param("partnerInstitutionId") Long partnerInstitutionId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("statuses") List<BookingStatus> statuses
+    );
 }

@@ -23,6 +23,8 @@ public class RegisterRequest {
 
     private Role requestedRole;
 
+    private Long institutionId;
+
     public String getFullName() {
         return fullName;
     }
@@ -53,5 +55,13 @@ public class RegisterRequest {
 
     public void setRequestedRole(Role requestedRole) {
         this.requestedRole = requestedRole;
+    }
+
+    public Long getInstitutionId() {
+        return institutionId;
+    }
+
+    public void setInstitutionId(Long institutionId) {
+        this.institutionId = institutionId;
     }
 }

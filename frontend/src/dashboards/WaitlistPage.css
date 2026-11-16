@@ -1,0 +1,707 @@
+
+.waitlist-page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    color: #1e293b;
+}
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.waitlist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 26px;
+}
+
+.waitlist-eyebrow {
+    margin-bottom: 9px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.waitlist-header h2 {
+    margin: 0;
+    color: #172b43;
+    font-size: 28px;
+    font-weight: 750;
+}
+
+.waitlist-header p {
+    margin: 9px 0 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.waitlist-refresh-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 17px;
+    border: 1px solid #dbe3ec;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.waitlist-refresh-button:hover:not(:disabled) {
+    border-color: #94a3b8;
+    background: #f8fafc;
+}
+
+.waitlist-refresh-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ==========================================
+   SUMMARY
+========================================== */
+
+.waitlist-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.waitlist-summary-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 105px;
+    padding: 19px;
+    border: 1px solid #e6ebf1;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+}
+
+.waitlist-summary-icon {
+    display: flex;
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+}
+
+.waitlist-summary-icon.total {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.waitlist-summary-icon.waiting {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.waitlist-summary-icon.notified {
+    background: #fefce8;
+    color: #a16207;
+}
+
+.waitlist-summary-icon.booked {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.waitlist-summary-card span {
+    display: block;
+    margin-bottom: 5px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.waitlist-summary-card strong {
+    color: #172b43;
+    font-size: 25px;
+    font-weight: 750;
+}
+
+/* ==========================================
+   ALERTS
+========================================== */
+
+.waitlist-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 13px 16px;
+    margin-bottom: 18px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.waitlist-alert svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.waitlist-alert.success {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.waitlist-alert.error {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+/* ==========================================
+   SECTION HEADING
+========================================== */
+
+.waitlist-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 17px;
+}
+
+.waitlist-section-heading h3 {
+    margin: 0;
+    color: #172b43;
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.waitlist-section-heading p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.waitlist-total-label {
+    padding: 7px 11px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.waitlist-loading {
+    display: flex;
+    min-height: 220px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    border: 1px solid #e6ebf1;
+    border-radius: 13px;
+    background: #ffffff;
+    color: #64748b;
+}
+
+.waitlist-loading p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.waitlist-empty {
+    display: flex;
+    min-height: 300px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 13px;
+    background: #ffffff;
+    text-align: center;
+}
+
+.waitlist-empty-icon {
+    display: flex;
+    width: 66px;
+    height: 66px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 17px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.waitlist-empty h3 {
+    margin: 0;
+    color: #172b43;
+    font-size: 17px;
+}
+
+.waitlist-empty p {
+    max-width: 440px;
+    margin: 9px 0 19px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.waitlist-empty button {
+    padding: 10px 17px;
+    border: none;
+    border-radius: 8px;
+    background: #1e40af;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.waitlist-empty button:hover {
+    background: #1e3a8a;
+}
+
+/* ==========================================
+   WAITLIST LIST
+========================================== */
+
+.waitlist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.waitlist-card {
+    overflow: hidden;
+    padding: 21px;
+    border: 1px solid #e4eaf1;
+    border-radius: 13px;
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+}
+
+.waitlist-card-header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.waitlist-equipment-icon {
+    display: flex;
+    width: 47px;
+    height: 47px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.waitlist-equipment-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.waitlist-equipment-info h3 {
+    margin: 0 0 5px;
+    color: #172b43;
+    font-size: 16px;
+    font-weight: 750;
+}
+
+.waitlist-equipment-info span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* ==========================================
+   STATUS BADGES
+========================================== */
+
+.waitlist-status {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    padding: 7px 11px;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.waitlist-status.status-waiting {
+    border-color: #fed7aa;
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.waitlist-status.status-notified {
+    border-color: #fde68a;
+    background: #fefce8;
+    color: #a16207;
+}
+
+.waitlist-status.status-booked {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.waitlist-status.status-cancelled {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+}
+
+.waitlist-status.status-declined {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.waitlist-status.status-expired {
+    border-color: #e2e8f0;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* ==========================================
+   REQUEST DETAILS
+========================================== */
+
+.waitlist-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    padding: 18px 0;
+    margin-top: 18px;
+    border-top: 1px solid #edf1f5;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.waitlist-detail-item {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.waitlist-detail-item span {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.waitlist-detail-item strong {
+    overflow-wrap: anywhere;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.5;
+}
+
+.waitlist-detail-item.purpose {
+    grid-column: span 3;
+}
+
+/* ==========================================
+   OFFER PANEL
+========================================== */
+
+.waitlist-offer-panel {
+    padding: 17px;
+    margin-top: 17px;
+    border: 1px solid #fde68a;
+    border-radius: 11px;
+    background: #fffbeb;
+}
+
+.waitlist-offer-heading {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #92400e;
+    font-size: 14px;
+}
+
+.waitlist-offer-heading svg {
+    flex-shrink: 0;
+}
+
+.waitlist-offer-times {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 16px;
+}
+
+.waitlist-offer-times div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.waitlist-offer-times span {
+    color: #92400e;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.waitlist-offer-times strong {
+    overflow-wrap: anywhere;
+    color: #78350f;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.waitlist-countdown {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding-top: 13px;
+    margin-top: 14px;
+    border-top: 1px solid #fde68a;
+    color: #92400e;
+    font-size: 13px;
+}
+
+.waitlist-expiry-note {
+    margin: 10px 0 0;
+    color: #b45309;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* ==========================================
+   INFORMATION NOTES
+========================================== */
+
+.waitlist-waiting-note,
+.waitlist-booked-note,
+.waitlist-inactive-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 12px 13px;
+    margin-top: 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.waitlist-waiting-note svg,
+.waitlist-booked-note svg,
+.waitlist-inactive-note svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.waitlist-waiting-note {
+    background: #fff7ed;
+    color: #9a3412;
+}
+
+.waitlist-booked-note {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.waitlist-inactive-note {
+    background: #f8fafc;
+    color: #64748b;
+}
+
+/* ==========================================
+   ACTION BUTTONS
+========================================== */
+
+.waitlist-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.waitlist-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 39px;
+    padding: 9px 14px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.waitlist-action-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.waitlist-action-button.accept {
+    background: #15803d;
+    color: #ffffff;
+}
+
+.waitlist-action-button.accept:hover:not(:disabled) {
+    background: #166534;
+}
+
+.waitlist-action-button.decline {
+    border-color: #fecaca;
+    background: #ffffff;
+    color: #b91c1c;
+}
+
+.waitlist-action-button.decline:hover:not(:disabled) {
+    background: #fef2f2;
+}
+
+.waitlist-action-button.cancel {
+    border-color: #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+}
+
+.waitlist-action-button.cancel:hover:not(:disabled) {
+    border-color: #94a3b8;
+    background: #f8fafc;
+}
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+
+.waitlist-spinning {
+    animation: waitlist-spin 1s linear infinite;
+}
+
+@keyframes waitlist-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1100px) {
+    .waitlist-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .waitlist-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .waitlist-refresh-button {
+        width: 100%;
+    }
+
+    .waitlist-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .waitlist-summary-card {
+        min-height: 90px;
+        gap: 10px;
+        padding: 13px;
+    }
+
+    .waitlist-summary-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .waitlist-summary-card strong {
+        font-size: 21px;
+    }
+
+    .waitlist-card {
+        padding: 15px;
+    }
+
+    .waitlist-card-header {
+        flex-wrap: wrap;
+    }
+
+    .waitlist-equipment-info {
+        flex-basis: calc(100% - 65px);
+    }
+
+    .waitlist-status {
+        margin-left: 59px;
+    }
+
+    .waitlist-details {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .waitlist-detail-item.purpose {
+        grid-column: span 2;
+    }
+
+    .waitlist-offer-times {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .waitlist-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 420px) {
+    .waitlist-summary-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .waitlist-card-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .waitlist-action-button {
+        width: 100%;
+    }
+}

@@ -4,6 +4,7 @@ package com.labresource.platform.controller;
 import com.labresource.platform.dto.RoleRequestResponse;
 import com.labresource.platform.entity.Role;
 import com.labresource.platform.service.RoleRequestService;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +19,11 @@ public class RoleRequestController {
 
     public RoleRequestController(
             RoleRequestService roleRequestService) {
+
         this.roleRequestService = roleRequestService;
     }
 
-    // Submit a role request
+    // Create role request
     @PostMapping
     public RoleRequestResponse createRequest(
             Authentication authentication,
@@ -49,15 +51,20 @@ public class RoleRequestController {
         );
     }
 
-    // System Administrator views pending requests
+    // Get pending requests
     @GetMapping("/pending")
-    public List<RoleRequestResponse> getPendingRequests() {
-        return roleRequestService.getPendingRequests();
+    public List<RoleRequestResponse> getPendingRequests(
+            Authentication authentication) {
+
+        return roleRequestService.getPendingRequests(
+                authentication.getName()
+        );
     }
 
-    // System Administrator approves or rejects a request
+    // Approve or reject request
     @PutMapping("/{id}/review")
     public RoleRequestResponse reviewRequest(
+            Authentication authentication,
             @PathVariable Long id,
             @RequestBody Map<String, Boolean> body) {
 
@@ -68,6 +75,10 @@ public class RoleRequestController {
                     "The approved field must be true or false");
         }
 
-        return roleRequestService.reviewRequest(id, approved);
+        return roleRequestService.reviewRequest(
+                authentication.getName(),
+                id,
+                approved
+        );
     }
 }

@@ -13,4 +13,6 @@ public interface DepartmentRepository
 
     boolean existsByNameIgnoreCaseAndInstitution_Id(
             String name, Long institutionId);
+
+    long countByInstitution_Id(Long institutionId);
 }

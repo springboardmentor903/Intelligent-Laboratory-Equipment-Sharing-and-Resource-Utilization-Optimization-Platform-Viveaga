@@ -1,7 +1,10 @@
+
 package com.labresource.platform.repository;
 
 import com.labresource.platform.entity.UsageLog;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,18 +21,28 @@ public interface UsageLogRepository extends JpaRepository<UsageLog, Long> {
             LocalDateTime endTime
     );
 
-    // Find completed usage sessions within a date range
     List<UsageLog> findByActualStartTimeBetweenAndActualEndTimeIsNotNull(
             LocalDateTime startTime,
             LocalDateTime endTime
     );
-    // Find completed equipment usage logs, newest first
+
     List<UsageLog> findByActualEndTimeIsNotNullOrderByActualEndTimeDesc();
 
-    // Find completed usage sessions for a specific equipment within a date range
     List<UsageLog> findByEquipmentIdAndActualStartTimeBetweenAndActualEndTimeIsNotNull(
             Long equipmentId,
             LocalDateTime startTime,
             LocalDateTime endTime
+    );
+
+    List<UsageLog> findByBookingId(Long bookingId);
+
+    @Query("""
+            SELECT u FROM UsageLog u
+            WHERE u.actualStartTime < :endTime
+            AND (u.actualEndTime IS NULL OR u.actualEndTime > :startTime)
+            """)
+    List<UsageLog> findOverlappingUsageLogs(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
     );
 }

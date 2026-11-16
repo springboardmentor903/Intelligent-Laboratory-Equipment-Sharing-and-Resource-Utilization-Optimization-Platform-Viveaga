@@ -2,8 +2,8 @@
 package com.labresource.platform.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(
@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
                 @Index(
                         name = "idx_booking_user",
                         columnList = "user_id"
+                ),
+                @Index(
+                        name = "idx_booking_recurring_series",
+                        columnList = "recurring_series_id"
                 )
         }
 )
@@ -50,8 +54,18 @@ public class Booking {
     @Column(name = "usage_mode", nullable = false, length = 20)
     private UsageMode usageMode = UsageMode.EXCLUSIVE;
 
+    @Column(name = "recurring_series_id", length = 36)
+    private String recurringSeriesId;
+
+    // External equipment sharing agreement.
+    // Null for normal bookings.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sharing_id")
+    private EquipmentSharing sharing;
+
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt =
+            LocalDateTime.now(ZoneOffset.UTC);
 
     public Booking() {
     }
@@ -108,15 +122,31 @@ public class Booking {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
     public UsageMode getUsageMode() {
         return usageMode;
     }
 
     public void setUsageMode(UsageMode usageMode) {
         this.usageMode = usageMode;
+    }
+
+    public String getRecurringSeriesId() {
+        return recurringSeriesId;
+    }
+
+    public void setRecurringSeriesId(String recurringSeriesId) {
+        this.recurringSeriesId = recurringSeriesId;
+    }
+
+    public EquipmentSharing getSharing() {
+        return sharing;
+    }
+
+    public void setSharing(EquipmentSharing sharing) {
+        this.sharing = sharing;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

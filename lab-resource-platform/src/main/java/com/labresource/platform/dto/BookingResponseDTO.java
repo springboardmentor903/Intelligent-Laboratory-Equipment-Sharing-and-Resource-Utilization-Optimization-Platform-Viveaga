@@ -6,10 +6,17 @@ import com.labresource.platform.entity.BookingStatus;
 import com.labresource.platform.entity.UsageMode;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 public class BookingResponseDTO {
 
+    private static final ZoneId PLATFORM_TIME_ZONE =
+            ZoneId.of("Asia/Kolkata");
+
     private Long id;
+    private String recurringSeriesId;
+
     private Long userId;
     private String userName;
     private String userRole;
@@ -28,10 +35,25 @@ public class BookingResponseDTO {
     public BookingResponseDTO() {
     }
 
+    private static LocalDateTime convertUtcToPlatformTime(
+            LocalDateTime utcTime) {
+
+        if (utcTime == null) {
+            return null;
+        }
+
+        return utcTime.atZone(ZoneOffset.UTC)
+                .withZoneSameInstant(PLATFORM_TIME_ZONE)
+                .toLocalDateTime();
+    }
+
     public static BookingResponseDTO fromEntity(Booking booking) {
+
         BookingResponseDTO dto = new BookingResponseDTO();
 
         dto.id = booking.getId();
+        dto.recurringSeriesId = booking.getRecurringSeriesId();
+
         dto.userId = booking.getUser().getId();
         dto.userName = booking.getUser().getFullName();
 
@@ -43,18 +65,28 @@ public class BookingResponseDTO {
         dto.equipmentName = booking.getEquipment().getName();
         dto.assetTag = booking.getEquipment().getAssetTag();
 
-        dto.startTime = booking.getStartTime();
-        dto.endTime = booking.getEndTime();
+        dto.startTime = convertUtcToPlatformTime(
+                booking.getStartTime());
+
+        dto.endTime = convertUtcToPlatformTime(
+                booking.getEndTime());
+
         dto.purpose = booking.getPurpose();
         dto.status = booking.getStatus();
         dto.usageMode = booking.getUsageMode();
-        dto.createdAt = booking.getCreatedAt();
+
+        dto.createdAt = convertUtcToPlatformTime(
+                booking.getCreatedAt());
 
         return dto;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getRecurringSeriesId() {
+        return recurringSeriesId;
     }
 
     public Long getUserId() {

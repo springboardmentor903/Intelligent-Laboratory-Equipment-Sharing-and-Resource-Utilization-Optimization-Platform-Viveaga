@@ -10,8 +10,14 @@ import {
     Menu,
     X,
     ShieldCheck,
+    Activity,
+    ListChecks,
 } from "lucide-react";
 import "./DashboardLayout.css";
+
+// ==========================================
+// ROLE DASHBOARD ROUTES
+// ==========================================
 
 const dashboardRoutes = {
     RESEARCHER_STUDENT: "/student-dashboard",
@@ -21,6 +27,10 @@ const dashboardRoutes = {
     INSTITUTION_ADMINISTRATOR: "/institution-admin-dashboard",
     SYSTEM_ADMINISTRATOR: "/system-admin-dashboard",
 };
+
+// ==========================================
+// NAVIGATION ITEMS
+// ==========================================
 
 const navItems = [
     {
@@ -34,30 +44,83 @@ const navItems = [
         icon: FlaskConical,
     },
     {
+        label: "Live Monitoring",
+        path: "/live-equipment",
+        icon: Activity,
+    },
+    {
         label: "Bookings",
         path: "/bookings",
         icon: CalendarCheck,
+    },
+    {
+        label: "My Waitlist",
+        path: "/waitlist",
+        icon: ListChecks,
+        allowedRoles: [
+            "RESEARCHER_STUDENT",
+            "DEPARTMENT_HEAD",
+        ],
     },
     {
         label: "Reports",
         path: "/reports",
         icon: ChartNoAxesCombined,
     },
+    {
+        label: "Utilization Analytics",
+        path: "/utilization-analytics",
+        icon: ChartNoAxesCombined,
+        allowedRoles: [
+            "SYSTEM_ADMINISTRATOR",
+            "INSTITUTION_ADMINISTRATOR",
+            "LAB_MANAGER",
+            "DEPARTMENT_HEAD",
+        ],
+    },
 ];
+
+// ==========================================
+// DASHBOARD LAYOUT
+// ==========================================
 
 export default function DashboardLayout({ title, children }) {
     const navigate = useNavigate();
     const location = useLocation();
+
     const [menuOpen, setMenuOpen] = useState(false);
 
     const role = sessionStorage.getItem("userRole");
-    const userName = sessionStorage.getItem("userName") || "User";
+
+    const userName =
+        sessionStorage.getItem("userName") || "User";
+
     const dashboardPath = dashboardRoutes[role] || "/";
+
+    // ==========================================
+    // FORMATTED ROLE
+    // ==========================================
 
     const formattedRole = (role || "USER")
         .replaceAll("_", " ")
         .toLowerCase()
-        .replace(/\b\w/g, (letter) => letter.toUpperCase());
+        .replace(/\b\w/g, (letter) =>
+            letter.toUpperCase()
+        );
+
+    // ==========================================
+    // ROLE-BASED NAVIGATION
+    // ==========================================
+
+    const visibleNavItems = navItems.filter(
+        (item) =>
+            !item.allowedRoles ||
+            item.allowedRoles.includes(role)
+    );
+
+    // ==========================================
+    // NAVIGATION HANDLER
+    // ==========================================
 
     const handleNavigation = (item) => {
         const destination =
@@ -69,6 +132,10 @@ export default function DashboardLayout({ title, children }) {
         setMenuOpen(false);
     };
 
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
     const handleLogout = () => {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userRole");
@@ -77,11 +144,19 @@ export default function DashboardLayout({ title, children }) {
         sessionStorage.removeItem("email");
 
         setMenuOpen(false);
+
         navigate("/", { replace: true });
     };
 
+    // ==========================================
+    // UI
+    // ==========================================
+
     return (
         <div className="dashboard-layout">
+
+            {/* SIDEBAR OVERLAY */}
+
             {menuOpen && (
                 <button
                     type="button"
@@ -91,13 +166,20 @@ export default function DashboardLayout({ title, children }) {
                 />
             )}
 
+            {/* ==================================
+                SIDEBAR
+            ================================== */}
+
             <aside
                 className={`dashboard-sidebar ${
                     menuOpen ? "sidebar-open" : ""
                 }`}
             >
+
                 {/* Sidebar Brand */}
+
                 <div className="sidebar-brand">
+
                     <div className="brand-icon">
                         <ShieldCheck size={25} />
                     </div>
@@ -115,15 +197,18 @@ export default function DashboardLayout({ title, children }) {
                     >
                         <X size={21} />
                     </button>
+
                 </div>
 
                 {/* Navigation */}
+
                 <div className="sidebar-section-label">
                     MAIN MENU
                 </div>
 
                 <nav className="dashboard-navigation">
-                    {navItems.map((item) => {
+
+                    {visibleNavItems.map((item) => {
                         const Icon = item.icon;
 
                         const destination =
@@ -146,15 +231,24 @@ export default function DashboardLayout({ title, children }) {
                                 }
                             >
                                 <Icon size={19} />
-                                <span>{item.label}</span>
+
+                                <span>
+                                    {item.label}
+                                </span>
                             </button>
                         );
                     })}
+
                 </nav>
 
-                {/* Bottom User Details and Logout */}
+                {/* ==================================
+                    BOTTOM USER DETAILS AND LOGOUT
+                ================================== */}
+
                 <div className="sidebar-bottom">
+
                     <div className="sidebar-user">
+
                         <div className="user-avatar">
                             {userName.charAt(0).toUpperCase()}
                         </div>
@@ -163,6 +257,7 @@ export default function DashboardLayout({ title, children }) {
                             <h4>{userName}</h4>
                             <p>{formattedRole}</p>
                         </div>
+
                     </div>
 
                     <button
@@ -173,12 +268,21 @@ export default function DashboardLayout({ title, children }) {
                         <LogOut size={18} />
                         <span>Logout</span>
                     </button>
+
                 </div>
+
             </aside>
 
-            {/* Main Dashboard */}
+            {/* ==================================
+                MAIN DASHBOARD
+            ================================== */}
+
             <main className="dashboard-main">
+
+                {/* TOPBAR */}
+
                 <header className="dashboard-topbar">
+
                     <button
                         type="button"
                         className="mobile-menu-button"
@@ -189,23 +293,33 @@ export default function DashboardLayout({ title, children }) {
                     </button>
 
                     <div className="topbar-heading">
+
                         <h1>{title}</h1>
+
                         <p>
                             Laboratory Resource Management Platform
                         </p>
+
                     </div>
 
                     <div className="topbar-profile">
+
                         <div className="topbar-avatar">
                             {userName.charAt(0).toUpperCase()}
                         </div>
+
                     </div>
+
                 </header>
+
+                {/* PAGE CONTENT */}
 
                 <div className="dashboard-content">
                     {children}
                 </div>
+
             </main>
+
         </div>
     );
 }

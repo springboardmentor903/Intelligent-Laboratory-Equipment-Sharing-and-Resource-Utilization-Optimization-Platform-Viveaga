@@ -4,8 +4,10 @@ package com.labresource.platform.controller;
 import com.labresource.platform.dto.BookingRequestDTO;
 import com.labresource.platform.dto.BookingResponseDTO;
 import com.labresource.platform.dto.BookingSuggestionDTO;
+
 import com.labresource.platform.entity.Booking;
 import com.labresource.platform.entity.User;
+
 import com.labresource.platform.repository.UserRepository;
 import com.labresource.platform.service.BookingService;
 
@@ -32,7 +34,7 @@ public class BookingController {
         this.userRepository = userRepository;
     }
 
-    // Create normal or recurring bookings
+    // Create normal or recurring bookings.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public List<BookingResponseDTO> createBooking(
@@ -42,6 +44,12 @@ public class BookingController {
         User user = getAuthenticatedUser(authentication);
 
         if (request.isRecurring()) {
+
+            if (request.getSharingId() != null) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "External sharing bookings cannot be recurring");
+            }
 
             List<Booking> bookings =
                     bookingService.createRecurringBookings(
@@ -66,13 +74,14 @@ public class BookingController {
                 request.getStartTime(),
                 request.getEndTime(),
                 request.getPurpose(),
-                request.getUsageMode()
+                request.getUsageMode(),
+                request.getSharingId()
         );
 
         return List.of(BookingResponseDTO.fromEntity(booking));
     }
 
-    // Suggest alternative booking slots
+    // Suggest alternative booking slots.
     @GetMapping("/suggestions")
     public List<BookingSuggestionDTO> getBookingSuggestions(
             @RequestParam Long equipmentId,
@@ -91,7 +100,7 @@ public class BookingController {
         );
     }
 
-    // View authenticated user's bookings
+    // View authenticated user's bookings.
     @GetMapping("/my")
     public List<BookingResponseDTO> getMyBookings(
             Authentication authentication) {
@@ -104,7 +113,7 @@ public class BookingController {
                 .toList();
     }
 
-    // View all bookings - LAB_MANAGER only
+    // View all bookings - LAB_MANAGER only.
     @GetMapping("/all")
     public List<BookingResponseDTO> getAllBookings(
             Authentication authentication) {
@@ -117,7 +126,7 @@ public class BookingController {
                 .toList();
     }
 
-    // Cancel user's own pending booking
+    // Cancel user's own pending booking.
     @PatchMapping("/{bookingId}/cancel")
     public BookingResponseDTO cancelBooking(
             @PathVariable Long bookingId,
@@ -133,33 +142,39 @@ public class BookingController {
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Approve booking - LAB_MANAGER only
+    // Approve booking - owning institution's LAB_MANAGER only.
     @PatchMapping("/{bookingId}/approve")
     public BookingResponseDTO approveBooking(
             @PathVariable Long bookingId,
             Authentication authentication) {
 
-        requireLabManager(authentication);
+        User manager = requireLabManager(authentication);
 
-        Booking booking = bookingService.approveBooking(bookingId);
+        Booking booking = bookingService.approveBooking(
+                bookingId,
+                manager.getId()
+        );
 
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Reject booking - LAB_MANAGER only
+    // Reject booking - owning institution's LAB_MANAGER only.
     @PatchMapping("/{bookingId}/reject")
     public BookingResponseDTO rejectBooking(
             @PathVariable Long bookingId,
             Authentication authentication) {
 
-        requireLabManager(authentication);
+        User manager = requireLabManager(authentication);
 
-        Booking booking = bookingService.rejectBooking(bookingId);
+        Booking booking = bookingService.rejectBooking(
+                bookingId,
+                manager.getId()
+        );
 
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Check in
+    // Check in.
     @PostMapping("/{bookingId}/check-in")
     public BookingResponseDTO checkIn(
             @PathVariable Long bookingId,
@@ -175,7 +190,7 @@ public class BookingController {
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Check out
+    // Check out.
     @PostMapping("/{bookingId}/check-out")
     public BookingResponseDTO checkOut(
             @PathVariable Long bookingId,
@@ -191,7 +206,7 @@ public class BookingController {
         return BookingResponseDTO.fromEntity(booking);
     }
 
-    // Get authenticated user
+    // Get authenticated user.
     private User getAuthenticatedUser(Authentication authentication) {
 
         if (authentication == null
@@ -211,19 +226,54 @@ public class BookingController {
                 ));
     }
 
-    // Allow only LAB_MANAGER
-    private void requireLabManager(Authentication authentication) {
+    // Allow only LAB_MANAGER.
+    private User requireLabManager(Authentication authentication) {
 
         User user = getAuthenticatedUser(authentication);
 
         if (user.getRole() == null
-                || !"LAB_MANAGER".equals(
-                user.getRole().toString())) {
+                || !"LAB_MANAGER".equals(user.getRole().toString())) {
 
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "Only Lab Managers can manage bookings"
             );
         }
+
+        return user;
+    }
+
+    // Approve recurring series.
+    @PatchMapping("/series/{seriesId}/approve")
+    public List<BookingResponseDTO> approveRecurringSeries(
+            @PathVariable String seriesId,
+            Authentication authentication) {
+
+        User manager = requireLabManager(authentication);
+
+        return bookingService.approveRecurringSeries(
+                        seriesId,
+                        manager.getId()
+                )
+                .stream()
+                .map(BookingResponseDTO::fromEntity)
+                .toList();
+    }
+
+    // Reject recurring series.
+    @PatchMapping("/series/{seriesId}/reject")
+    public List<BookingResponseDTO> rejectRecurringSeries(
+            @PathVariable String seriesId,
+            Authentication authentication) {
+
+        User manager = requireLabManager(authentication);
+
+        return bookingService.rejectRecurringSeries(
+                        seriesId,
+                        manager.getId()
+                )
+                .stream()
+                .map(BookingResponseDTO::fromEntity)
+                .toList();
     }
 }

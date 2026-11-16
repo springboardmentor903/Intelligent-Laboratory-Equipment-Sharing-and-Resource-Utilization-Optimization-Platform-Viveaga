@@ -1,0 +1,226 @@
+
+.institution-list-page {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 10px 0 30px;
+    color: #172b3a;
+}
+
+.institution-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid #dce5e9;
+    border-radius: 9px;
+    background: #fff;
+    color: #405667;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.institution-back-button:hover {
+    background: #f0f7f6;
+    border-color: #b6dcd4;
+}
+
+.institution-list-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin: 28px 0;
+    padding: 28px;
+    border: 1px solid #dcebe8;
+    border-radius: 17px;
+    background: linear-gradient(115deg, #e9f7f3, #f4f8fc);
+}
+
+.institution-list-heading > div:first-child > span {
+    color: #168474;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.institution-list-heading h2 {
+    margin: 10px 0;
+    color: #183447;
+    font-size: 27px;
+}
+
+.institution-list-heading p {
+    margin: 0;
+    color: #71838f;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.institution-list-count {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 16px 20px;
+    border: 1px solid #dcebe8;
+    border-radius: 13px;
+    background: white;
+    color: #20877a;
+}
+
+.institution-list-count strong {
+    font-size: 24px;
+    color: #193447;
+}
+
+.institution-list-count span {
+    color: #71838f;
+    font-size: 12px;
+}
+
+.institution-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.institution-list-card {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 23px;
+    border: 1px solid #e2e9ee;
+    border-radius: 16px;
+    background: white;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.institution-list-card:hover {
+    transform: translateY(-4px);
+    border-color: #a9d7cc;
+    box-shadow: 0 10px 25px rgba(31, 55, 72, 0.08);
+}
+
+.institution-list-card:focus-visible {
+    outline: 3px solid #75bdb0;
+    outline-offset: 3px;
+}
+
+.institution-list-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.institution-list-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 49px;
+    height: 49px;
+    border-radius: 13px;
+    background: #e5f7ef;
+    color: #219875;
+}
+
+.institution-list-arrow {
+    color: #96aab6;
+}
+
+.institution-list-card h3 {
+    margin: 22px 0 10px;
+    color: #1b384a;
+    font-size: 19px;
+}
+
+.institution-list-address {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 22px;
+    color: #788b98;
+    font-size: 12px;
+}
+
+.institution-list-users {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    padding: 14px;
+    border: 1px solid #edf0f4;
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.institution-list-users span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #607583;
+    font-size: 11px;
+}
+
+.institution-list-users strong {
+    color: #1e3a8a;
+    font-size: 22px;
+}
+
+.institution-list-hint {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 17px;
+    padding-top: 14px;
+    border-top: 1px solid #edf0f4;
+    color: #238779;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.institution-list-message,
+.institution-list-error {
+    padding: 30px;
+    border: 1px solid #e2e9ee;
+    border-radius: 13px;
+    background: white;
+    color: #71838f;
+    text-align: center;
+    font-size: 13px;
+}
+
+.institution-list-error {
+    color: #b64242;
+}
+
+.institution-list-error button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 13px;
+    border: 1px solid #dce5e9;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .institution-list-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .institution-list-heading h2 {
+        font-size: 22px;
+    }
+
+    .institution-list-grid {
+        grid-template-columns: 1fr;
+    }
+}

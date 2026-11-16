@@ -695,3 +695,593 @@
         flex-direction: column;
     }
 }
+
+
+/* INSTITUTION MANAGEMENT */
+
+.sysadmin-institutions {
+    margin-top: 32px;
+}
+
+.sysadmin-refresh-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border: 1px solid #dce3ec;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sysadmin-refresh-button:hover {
+    background: #f1f5f9;
+}
+
+.sysadmin-refresh-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.sysadmin-spinning {
+    animation: sysadmin-spin 1s linear infinite;
+}
+
+@keyframes sysadmin-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.sysadmin-institution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.sysadmin-institution-card {
+    min-width: 0;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+}
+
+.sysadmin-institution-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.sysadmin-institution-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: #315c9b;
+    background: #edf4ff;
+    border-radius: 12px;
+}
+
+.sysadmin-institution-id {
+    padding: 6px 10px;
+    color: #64748b;
+    background: #f1f5f9;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.sysadmin-institution-card > h3 {
+    margin: 17px 0 8px;
+    color: #172554;
+    font-size: 19px;
+}
+
+.sysadmin-institution-address {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.sysadmin-institution-users {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 18px 0;
+    padding: 14px;
+    background: #f8fafc;
+    border: 1px solid #edf0f4;
+    border-radius: 10px;
+}
+
+.sysadmin-institution-users > div {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sysadmin-institution-users > strong {
+    color: #1e3a8a;
+    font-size: 22px;
+}
+
+.sysadmin-institution-staff {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.sysadmin-staff-group {
+    padding-top: 15px;
+    border-top: 1px solid #edf0f4;
+}
+
+.sysadmin-staff-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+}
+
+.sysadmin-staff-heading h4 {
+    flex: 1;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.sysadmin-staff-heading > span {
+    min-width: 23px;
+    padding: 3px 7px;
+    text-align: center;
+    color: #315c9b;
+    background: #edf4ff;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.sysadmin-staff-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 13px;
+}
+
+.sysadmin-staff-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.sysadmin-staff-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 35px;
+    height: 35px;
+    color: #315c9b;
+    background: #edf4ff;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.sysadmin-staff-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.sysadmin-staff-info strong {
+    color: #334155;
+    font-size: 13px;
+}
+
+.sysadmin-staff-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #64748b;
+    font-size: 11px;
+}
+
+.sysadmin-not-assigned {
+    margin: 12px 0 0;
+    padding: 11px;
+    color: #94a3b8;
+    background: #f8fafc;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.sysadmin-institution-message {
+    margin-top: 18px;
+    padding: 30px 20px;
+    text-align: center;
+    color: #64748b;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .sysadmin-institution-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sysadmin-institution-card {
+        padding: 17px;
+    }
+
+    .sysadmin-section-heading {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+}
+
+/* CLICKABLE DASHBOARD CARDS */
+
+.sysadmin-clickable-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sysadmin-clickable-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.09);
+}
+
+.sysadmin-clickable-card:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+.sysadmin-card-hint {
+    display: block;
+    margin-top: 10px;
+    color: #64748b;
+    font-size: 11px;
+}
+
+/* COLLAPSED INSTITUTION CARD */
+
+.sysadmin-institution-summary {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+.sysadmin-institution-summary:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 4px;
+    border-radius: 10px;
+}
+
+.sysadmin-institution-card {
+    align-self: start;
+}
+
+.sysadmin-institution-summary h3 {
+    margin: 17px 0 8px;
+    color: #172554;
+    font-size: 19px;
+    text-align: center;
+}
+
+.sysadmin-expand-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding-top: 13px;
+    border-top: 1px solid #edf0f4;
+    color: #315c9b;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sysadmin-expanded-arrow {
+    transform: rotate(90deg);
+}
+
+.sysadmin-institution-details {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+/* ALL USERS IN INSTITUTION */
+
+.sysadmin-all-institution-users {
+    padding-top: 16px;
+    border-top: 1px solid #edf0f4;
+}
+
+.sysadmin-staff-info small {
+    color: #64748b;
+    font-size: 10px;
+    text-transform: capitalize;
+}
+
+/* USERS MODAL */
+
+.sysadmin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+.sysadmin-users-modal {
+    display: flex;
+    flex-direction: column;
+    width: min(1050px, 100%);
+    max-height: 85vh;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.sysadmin-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 23px 25px;
+    border-bottom: 1px solid #e8edf3;
+}
+
+.sysadmin-modal-header h2 {
+    margin: 0 0 7px;
+    color: #172554;
+    font-size: 21px;
+}
+
+.sysadmin-modal-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.sysadmin-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 9px;
+    background: #f1f5f9;
+    color: #475569;
+    cursor: pointer;
+}
+
+.sysadmin-modal-close:hover {
+    background: #e2e8f0;
+}
+
+.sysadmin-users-count {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 18px 25px 0;
+    color: #315c9b;
+    font-size: 14px;
+}
+
+.sysadmin-users-filters {
+    display: flex;
+    gap: 12px;
+    padding: 18px 25px;
+}
+
+.sysadmin-search-box {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 9px;
+    min-width: 0;
+    padding: 0 12px;
+    border: 1px solid #dce3ec;
+    border-radius: 9px;
+    color: #64748b;
+}
+
+.sysadmin-search-box input {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 0;
+    border: 0;
+    outline: none;
+    color: #334155;
+    background: transparent;
+    font-size: 13px;
+}
+
+.sysadmin-users-filters select {
+    max-width: 230px;
+    padding: 10px;
+    border: 1px solid #dce3ec;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 12px;
+}
+
+.sysadmin-users-table-wrapper {
+    overflow: auto;
+    margin: 0 25px;
+    border: 1px solid #e8edf3;
+    border-radius: 10px;
+}
+
+.sysadmin-users-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 12px;
+}
+
+.sysadmin-users-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 13px;
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sysadmin-users-table td {
+    padding: 13px;
+    border-top: 1px solid #edf0f4;
+    color: #475569;
+}
+
+.sysadmin-table-user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 150px;
+}
+
+.sysadmin-table-user > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #edf4ff;
+    color: #315c9b;
+    font-weight: 700;
+}
+
+.sysadmin-table-user strong {
+    color: #334155;
+}
+
+.sysadmin-role-badge {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: #edf4ff;
+    color: #315c9b;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.sysadmin-no-users {
+    padding: 25px !important;
+    text-align: center;
+    color: #94a3b8 !important;
+}
+
+.sysadmin-modal-message,
+.sysadmin-modal-error {
+    margin: 20px 25px;
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    background: #f8fafc;
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+.sysadmin-modal-error {
+    color: #b91c1c;
+    background: #fef2f2;
+}
+
+.sysadmin-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 16px 25px;
+    border-top: 1px solid #e8edf3;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.sysadmin-modal-footer button {
+    padding: 9px 18px;
+    border: 0;
+    border-radius: 8px;
+    background: #315c9b;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 650px) {
+    .sysadmin-modal-overlay {
+        padding: 8px;
+    }
+
+    .sysadmin-users-modal {
+        max-height: 94vh;
+    }
+
+    .sysadmin-users-filters {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .sysadmin-users-filters select {
+        max-width: none;
+    }
+
+    .sysadmin-modal-header {
+        padding: 17px;
+    }
+
+    .sysadmin-users-table-wrapper {
+        margin: 0 12px;
+    }
+
+    .sysadmin-users-table {
+        min-width: 700px;
+    }
+
+    .sysadmin-modal-footer {
+        padding: 14px;
+    }
+}
+

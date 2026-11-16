@@ -1,3 +1,4 @@
+
 package com.labresource.platform.entity;
 
 import jakarta.persistence.*;
@@ -15,6 +16,10 @@ import java.time.LocalDateTime;
                 @Index(
                         name = "idx_waitlist_user",
                         columnList = "user_id"
+                ),
+                @Index(
+                        name = "idx_waitlist_offer_expiry",
+                        columnList = "status, offer_expires_at"
                 )
         }
 )
@@ -47,6 +52,22 @@ public class Waitlist {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    // Time when the system offered the slot.
+    @Column(name = "offered_at")
+    private LocalDateTime offeredAt;
+
+    // Deadline for accepting the offer.
+    @Column(name = "offer_expires_at")
+    private LocalDateTime offerExpiresAt;
+
+    // Actual start time of the slot being offered.
+    @Column(name = "offered_start_time")
+    private LocalDateTime offeredStartTime;
+
+    // Actual end time of the slot being offered.
+    @Column(name = "offered_end_time")
+    private LocalDateTime offeredEndTime;
 
     public Waitlist() {
     }
@@ -105,5 +126,37 @@ public class Waitlist {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public LocalDateTime getOfferedAt() {
+        return offeredAt;
+    }
+
+    public void setOfferedAt(LocalDateTime offeredAt) {
+        this.offeredAt = offeredAt;
+    }
+
+    public LocalDateTime getOfferExpiresAt() {
+        return offerExpiresAt;
+    }
+
+    public void setOfferExpiresAt(LocalDateTime offerExpiresAt) {
+        this.offerExpiresAt = offerExpiresAt;
+    }
+
+    public LocalDateTime getOfferedStartTime() {
+        return offeredStartTime;
+    }
+
+    public void setOfferedStartTime(LocalDateTime offeredStartTime) {
+        this.offeredStartTime = offeredStartTime;
+    }
+
+    public LocalDateTime getOfferedEndTime() {
+        return offeredEndTime;
+    }
+
+    public void setOfferedEndTime(LocalDateTime offeredEndTime) {
+        this.offeredEndTime = offeredEndTime;
     }
 }

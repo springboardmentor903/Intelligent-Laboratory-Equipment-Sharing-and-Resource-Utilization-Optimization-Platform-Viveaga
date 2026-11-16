@@ -6,13 +6,14 @@ public class EquipmentHeatmapDTO {
 
     private Long equipmentId;
     private String equipmentName;
-    private Map<String, Integer> hourlyUsage;
+
+    private Map<String, Map<String, EquipmentHeatmapSlotDTO>> hourlyUsage;
 
     public EquipmentHeatmapDTO(
             Long equipmentId,
             String equipmentName,
-            Map<String, Integer> hourlyUsage
-    ) {
+            Map<String, Map<String, EquipmentHeatmapSlotDTO>> hourlyUsage) {
+
         this.equipmentId = equipmentId;
         this.equipmentName = equipmentName;
         this.hourlyUsage = hourlyUsage;
@@ -26,7 +27,7 @@ public class EquipmentHeatmapDTO {
         return equipmentName;
     }
 
-    public Map<String, Integer> getHourlyUsage() {
+    public Map<String, Map<String, EquipmentHeatmapSlotDTO>> getHourlyUsage() {
         return hourlyUsage;
     }
 }

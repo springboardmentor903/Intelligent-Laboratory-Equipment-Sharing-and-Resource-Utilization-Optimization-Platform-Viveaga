@@ -6,8 +6,11 @@ import com.labresource.platform.dto.EquipmentListDTO;
 import com.labresource.platform.entity.Equipment;
 import com.labresource.platform.entity.EquipmentStatus;
 import com.labresource.platform.entity.Tag;
+import com.labresource.platform.entity.User;
+import com.labresource.platform.entity.Role;
 import com.labresource.platform.repository.EquipmentRepository;
 import com.labresource.platform.repository.TagRepository;
+import com.labresource.platform.repository.UserRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,20 +30,21 @@ public class EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
     private final TagRepository tagRepository;
+    private final UserRepository userRepository;
 
     public EquipmentService(
             EquipmentRepository equipmentRepository,
-            TagRepository tagRepository) {
+            TagRepository tagRepository,
+            UserRepository userRepository) {
         this.equipmentRepository = equipmentRepository;
         this.tagRepository = tagRepository;
+        this.userRepository = userRepository;
     }
 
-    // Get all equipment
     public List<Equipment> getAllEquipment() {
         return equipmentRepository.findAll();
     }
 
-    // Get equipment by ID
     public EquipmentDetailDTO getEquipmentById(Long id) {
         Equipment equipment = equipmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(
@@ -49,7 +53,6 @@ public class EquipmentService {
         return EquipmentDetailDTO.fromEntity(equipment);
     }
 
-    // Get equipment by asset tag
     public EquipmentDetailDTO getEquipmentByAssetTag(String assetTag) {
         Equipment equipment = equipmentRepository.findByAssetTag(assetTag)
                 .orElseThrow(() -> new RuntimeException(
@@ -58,7 +61,6 @@ public class EquipmentService {
         return EquipmentDetailDTO.fromEntity(equipment);
     }
 
-    // Create equipment
     @Transactional
     public Equipment createEquipment(Equipment equipment) {
 
@@ -80,7 +82,7 @@ public class EquipmentService {
         return equipmentRepository.save(equipment);
     }
 
-    // Pagination and filters
+    // Institution-wise equipment search
     public Page<EquipmentListDTO> searchEquipment(
             int page,
             int size,
@@ -88,7 +90,8 @@ public class EquipmentService {
             Long categoryId,
             Long tagId,
             Long departmentId,
-            String keyword) {
+            String keyword,
+            String email) {
 
         if (page < 0) {
             throw new IllegalArgumentException("Page cannot be negative");
@@ -99,8 +102,31 @@ public class EquipmentService {
                     "Page size must be between 1 and 100");
         }
 
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
         Specification<Equipment> spec =
                 (root, query, cb) -> cb.conjunction();
+
+        // System Administrator can view all institutions.
+        // Other users can view only their own institution's equipment.
+        if (user.getRole() != Role.SYSTEM_ADMINISTRATOR) {
+
+            if (user.getInstitution() == null) {
+                throw new IllegalStateException(
+                        "Your account is not associated with an institution");
+            }
+
+            Long institutionId = user.getInstitution().getId();
+
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(
+                            root.get("department")
+                                    .get("institution")
+                                    .get("id"),
+                            institutionId
+                    ));
+        }
 
         if (status != null) {
             spec = spec.and((root, query, cb) ->
@@ -143,7 +169,6 @@ public class EquipmentService {
                 .map(EquipmentListDTO::fromEntity);
     }
 
-    // Update equipment - return DTO to avoid lazy-loading JSON errors
     @Transactional
     public EquipmentDetailDTO updateEquipment(Long id, Equipment updated) {
 
@@ -183,7 +208,6 @@ public class EquipmentService {
         return EquipmentDetailDTO.fromEntity(saved);
     }
 
-    // Update equipment status
     @Transactional
     public Equipment updateEquipmentStatus(Long id, EquipmentStatus newStatus) {
 
@@ -210,7 +234,6 @@ public class EquipmentService {
         return equipmentRepository.save(equipment);
     }
 
-    // Assign tags to equipment
     @Transactional
     public EquipmentDetailDTO assignTags(Long equipmentId, Set<Long> tagIds) {
 
